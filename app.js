@@ -503,16 +503,16 @@ function drawLongitudinalFinal(ctx, c, p, w, h){
   const xMin = 142;
   const xMax = w - 70;
 
-  // Dense particle medium: many rows to make the graph visually full.
-  const rows = 12;
-  const rowGap = 17;
-  const particleRadius = 6.4;
+  // Dense particle medium: larger particles and more rows so the graph fills the mobile screen more fully.
+  const rows = 16;
+  const rowGap = 16;
+  const particleRadius = 7.6;
   const bandHeight = (rows - 1) * rowGap;
-  const y0 = Math.max(118, Math.min(h - bandHeight - 46, h * 0.35));
+  const y0 = Math.max(138, Math.min(h - bandHeight - 38, h * 0.31));
   const yCenter = y0 + bandHeight * 0.5;
-  const axisY = y0 + bandHeight + 28;
+  const axisY = y0 + bandHeight + 18;
 
-  const currentAmpPx = 15.5 * p.A;
+  const currentAmpPx = 15.5 * p.A; // keep longitudinal displacement physically consistent
   const baseGap = 31;
   const k = 2 * Math.PI / 255;
   const phase = vizState.t * 0.105 * p.speed;
@@ -543,7 +543,7 @@ function drawLongitudinalFinal(ctx, c, p, w, h){
   ctx.fillText("Longitudinal Wave (คลื่นตามยาว)", 24, 34);
 
   // Wave propagation arrow: moved closer to equilibrium/particle field
-  const arrowY = Math.max(70, y0 - 48);
+  const arrowY = Math.max(72, y0 - 34);
   ctx.save();
   ctx.strokeStyle="rgba(34,211,238,.96)";
   ctx.fillStyle="rgba(34,211,238,.96)";
@@ -564,7 +564,7 @@ function drawLongitudinalFinal(ctx, c, p, w, h){
   ctx.restore();
 
   // Equilibrium line and label
-  const eqLabelY = y0 - 17;
+  const eqLabelY = y0 - 12;
   ctx.save();
   ctx.strokeStyle="rgba(255,255,255,.78)";
   ctx.setLineDash([8,8]);

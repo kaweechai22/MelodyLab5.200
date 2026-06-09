@@ -2011,7 +2011,7 @@ main.wrap{
 }
 
 
-/* v5.62: dense particle graph + left speaker source */
+/* v5.63: larger particles + more rows to fill the graph area */
 .longitudinalFocusPage .vizMediaFrame canvas{
   aspect-ratio:1200/560 !important;
   min-height:360px !important;
