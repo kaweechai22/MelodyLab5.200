@@ -685,7 +685,7 @@ function drawPressureWaveFinal(ctx, c, p, w, h){
 
   const xMin = Math.max(158, w * 0.155);
   const xMax = w - 76;
-  const obsXBase = w * 0.555;
+  const obsXBase = w * 0.555;        // fixed observation position
   const phase = vizState.t * 0.105 * p.speed;
   const wavelengthPx = 270;
   const k = 2 * Math.PI / wavelengthPx;
@@ -729,13 +729,14 @@ function drawPressureWaveFinal(ctx, c, p, w, h){
   ctx.fillText("ทิศทางการเคลื่อนที่ของคลื่น", w*0.57, arrowY-16);
   ctx.restore();
 
-  // Same physical function for particle density and pressure graph.
-  // +ΔP = ส่วนอัด (Compression), -ΔP = ส่วนขยาย (Rarefaction)
+  // Same physical model for pressure and particles.
+  // ΔP(x,t) ∝ cos(kx - ωt)
+  // particle displacement u(x,t) ∝ -sin(kx - ωt)
   const pressureAt = (x)=>Math.cos(k*(x-obsXBase)-phase);
+  const displacementAt = (x)=>-9.5 * p.A * Math.sin(k*(x-obsXBase)-phase);
 
-  // Particle field frame, so the upper graph is clearly visible.
+  // Particle field frame
   ctx.save();
-  const fieldPad = 12;
   const fieldX0 = xMin-24;
   const fieldY0 = particleTop-18;
   const fieldW = xMax - xMin + 48;
@@ -751,7 +752,7 @@ function drawPressureWaveFinal(ctx, c, p, w, h){
   ctx.stroke();
   ctx.restore();
 
-  // Pressure glow bands generated from pressureAt(x).
+  // Pressure glow bands
   ctx.save();
   for(let x=xMin; x<=xMax; x+=6){
     const pr = pressureAt(x);
@@ -771,19 +772,17 @@ function drawPressureWaveFinal(ctx, c, p, w, h){
   }
   ctx.restore();
 
-  // Visible natural particle cloud.
+  // Natural particle cloud
   const particleHeight = particleBottom - particleTop;
   const densityXGap = Math.max(12, Math.min(17, w * 0.014));
   const densityYGap = Math.max(10, Math.min(14, particleHeight / 10));
   const particleR = Math.max(3.4, Math.min(5.0, w * 0.0048));
-  const displacementAmpPx = 9.5 * p.A;
   const obsParticleY = (particleTop + particleBottom) / 2;
 
   function pseudoRand(a,b){
     return Math.abs(Math.sin(a*12.9898 + b*78.233) * 43758.5453) % 1;
   }
-  function drawVisibleParticle(x,y,r,pr,col,row){
-    // Strong, visible dot with glow.
+  function drawVisibleParticle(x,y,r,pr){
     const hot = pr >= 0;
     ctx.save();
     ctx.shadowColor = hot ? "rgba(76,210,255,.72)" : "rgba(170,110,255,.48)";
@@ -808,25 +807,21 @@ function drawPressureWaveFinal(ctx, c, p, w, h){
   for(let yy=particleTop+10, row=0; yy<=particleBottom-8; yy+=densityYGap, row++){
     for(let base=xMin+10, col=0; base<=xMax-8; base+=densityXGap, col++){
       const pr = pressureAt(base);
-      // More dots at compression, but still keep enough dots at expansion so the graph is visible.
       const keepProbability = 0.72 + 0.22 * ((pr + 1) / 2);
       if(pseudoRand(col,row) > keepProbability) continue;
 
-      // Sign makes dense zone align with +ΔP.
-      const displacement = -displacementAmpPx * Math.sin(k*(base-obsXBase)-phase);
-      const jitterX = (pseudoRand(col+91,row+7)-0.5) * densityXGap * 0.70;
-      const jitterY = (pseudoRand(col+17,row+83)-0.5) * densityYGap * 0.70;
-      const x = base + displacement + jitterX;
-      const y = yy + jitterY;
+      const x = base + displacementAt(base) + (pseudoRand(col+91,row+7)-0.5) * densityXGap * 0.70;
+      const y = yy + (pseudoRand(col+17,row+83)-0.5) * densityYGap * 0.70;
 
-      if(Math.abs(x-obsXBase) < 6.5 && Math.abs(y-obsParticleY) < 10) continue;
+      // Leave room for red observed particle
+      if(Math.abs(x-obsXBase) < 8 && Math.abs(y-obsParticleY) < 11) continue;
 
       const localR = particleR * (0.92 + 0.22 * ((pr + 1) / 2)) * (0.88 + pseudoRand(col+3,row+11)*0.28);
-      drawVisibleParticle(x,y,localR,pr,col,row);
+      drawVisibleParticle(x,y,localR,pr);
     }
   }
 
-  // Shared observation line above both graphs.
+  // Fixed observation line: this is the x-position used by the pressure graph marker.
   ctx.save();
   ctx.strokeStyle="rgba(255,83,128,.92)";
   ctx.setLineDash([8,8]);
@@ -842,13 +837,28 @@ function drawPressureWaveFinal(ctx, c, p, w, h){
   ctx.fillText("จุดสังเกต", obsXBase, particleTop-26);
   ctx.restore();
 
-  // Red observation particle.
+  // Red observed particle: moves left-right around the fixed observation position.
+  const redParticleX = obsXBase + displacementAt(obsXBase);
   ctx.save();
-  drawParticleShadow(ctx,obsXBase,obsParticleY,8.5);
-  drawParticleSphere(ctx,obsXBase,obsParticleY,8.5,"red");
+  ctx.strokeStyle="rgba(255,190,210,.90)";
+  ctx.lineWidth=3;
+  ctx.beginPath();
+  ctx.moveTo(obsXBase, obsParticleY);
+  ctx.lineTo(redParticleX, obsParticleY);
+  ctx.stroke();
+  const dir = redParticleX >= obsXBase ? 1 : -1;
+  ctx.fillStyle="rgba(255,190,210,.95)";
+  ctx.beginPath();
+  ctx.moveTo(redParticleX, obsParticleY);
+  ctx.lineTo(redParticleX - dir*13, obsParticleY - 7);
+  ctx.lineTo(redParticleX - dir*13, obsParticleY + 7);
+  ctx.closePath();
+  ctx.fill();
+  drawParticleShadow(ctx,redParticleX,obsParticleY,8.5);
+  drawParticleSphere(ctx,redParticleX,obsParticleY,8.5,"red");
   ctx.restore();
 
-  // Labels: use requested terms.
+  // Labels
   ctx.save();
   ctx.font="bold 14px Sarabun, system-ui, sans-serif";
   ctx.textAlign="center";
@@ -962,7 +972,7 @@ function drawPressureWaveFinal(ctx, c, p, w, h){
   ctx.fillText("ต่ำ", xMin-85, curveBottom+4);
   ctx.restore();
 
-  // Pressure curve uses same pressureAt(x) as the particle density above.
+  // Pressure curve uses pressureAt(x). The red marker stays at the fixed observation x.
   const pts=[];
   for(let x=xMin; x<=xMax; x+=4){
     const y = curveMid - pressureAt(x) * curveAmp;
@@ -978,7 +988,6 @@ function drawPressureWaveFinal(ctx, c, p, w, h){
   ctx.stroke();
   ctx.restore();
 
-  // Red pressure marker linked to upper red particle.
   const graphMarkerX = obsXBase;
   const graphMarkerY = curveMid - pressureAt(graphMarkerX) * curveAmp;
   ctx.save();
