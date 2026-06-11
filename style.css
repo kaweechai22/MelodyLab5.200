@@ -2444,3 +2444,6 @@ main.wrap{
 .speedSoundFocusPage .distanceRow .paramIcon{background:linear-gradient(135deg,rgba(251,191,36,.38),rgba(59,130,246,.22));}
 .speedSoundFocusPage .tempRow .paramIcon{background:linear-gradient(135deg,rgba(251,146,60,.38),rgba(168,85,247,.22));}
 .speedSoundFocusPage .travelTimeRow .paramIcon{background:linear-gradient(135deg,rgba(34,211,238,.34),rgba(168,85,247,.24));font-size:.78rem;}
+
+.soundTopicPage .vizMediaFrame canvas{background:transparent;}
+.soundTopicPage .conceptChip .chipIcon{min-width:34px;}

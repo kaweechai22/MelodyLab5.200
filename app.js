@@ -1545,6 +1545,15 @@ function drawSpeedOfSoundTeachingFinal(ctx, c, pUnused, w, h){
   }
 }
 
+
+
+const soundTopicModes = new Set(["soundReflection","soundRefraction","soundDiffraction","soundInterference","resonanceAirHarmonics","shockWave","soundIntensity","soundIntensityLevel","soundLevelHearing","noisePollution","applicationsSound"]);
+function gNum(id,fb){const e=$(id); return e?Number(e.value||fb):fb;} function lab(id,t){if($(id))$(id).textContent=t;}
+function arr(ctx,x1,y1,x2,y2,col="#22d3ee",lw=3){ctx.save();ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=lw;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();let a=Math.atan2(y2-y1,x2-x1),h=12;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-h*Math.cos(a-Math.PI/6),y2-h*Math.sin(a-Math.PI/6));ctx.lineTo(x2-h*Math.cos(a+Math.PI/6),y2-h*Math.sin(a+Math.PI/6));ctx.closePath();ctx.fill();ctx.restore();}
+function baseTopic(ctx,w,h,title){ctx.clearRect(0,0,w,h);let bg=ctx.createLinearGradient(0,0,w,h);bg.addColorStop(0,"#020817");bg.addColorStop(1,"#06152e");ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);ctx.strokeStyle="rgba(148,163,184,.10)";for(let x=0;x<w;x+=78){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}for(let y=0;y<h;y+=52){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}let p={x:44,y:76,w:w-88,h:h-126};ctx.fillStyle="rgba(4,18,42,.74)";ctx.strokeStyle="rgba(88,166,255,.32)";ctx.lineWidth=1.6;roundRect(ctx,p.x,p.y,p.w,p.h,18);ctx.fill();ctx.stroke();ctx.fillStyle="#e8f5ff";ctx.font="bold 20px Sarabun";ctx.textAlign="left";ctx.fillText(title,24,34);return p;}
+function waves(ctx,x,y,n,sp,col){ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2;for(let i=1;i<=n;i++){ctx.globalAlpha=Math.max(.15,.8-i*.07);ctx.beginPath();ctx.arc(x,y,i*sp,-.85,.85);ctx.stroke();}ctx.restore();}
+function drawSoundTopicPlaceholder(ctx,c,p,w,h,mode){let box,cx,cy,t=vizState.t*.035*(p.speed||1); if(mode==="soundReflection"){let a=gNum("vizAngle",35);lab("vizAngleLabel",a.toFixed(0)+"°");box=baseTopic(ctx,w,h,"Sound Reflection (การสะท้อนของเสียง)");cx=w/2;cy=box.y+box.h*.52;let wx=box.x+box.w-210,sx=box.x+135,sy=cy+55;drawSpeaker(ctx,sx,sy,.85);waves(ctx,sx,sy,7,30,"rgba(34,211,238,.75)");ctx.strokeStyle="rgba(255,255,255,.65)";ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(wx,box.y+40);ctx.lineTo(wx,box.y+box.h-40);ctx.stroke();ctx.setLineDash([8,7]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(wx-140,cy);ctx.lineTo(wx+110,cy);ctx.stroke();ctx.setLineDash([]);arr(ctx,sx+65,sy-18,wx,cy,"#22d3ee",4);arr(ctx,wx,cy,sx+65,cy-110,"#ff5cab",4);ctx.fillStyle="#e8f5ff";ctx.font="bold 16px Sarabun";ctx.fillText("θᵢ = θᵣ",wx-95,cy+72);} else if(mode==="soundRefraction"){box=baseTopic(ctx,w,h,"Sound Refraction (การหักเหของเสียง)");cx=w/2;cy=box.y+box.h*.5;ctx.fillStyle="rgba(255,120,40,.08)";ctx.fillRect(box.x+18,box.y+22,box.w-36,box.h/2-22);ctx.fillStyle="rgba(34,211,238,.09)";ctx.fillRect(box.x+18,cy,box.w-36,box.h/2-22);ctx.strokeStyle="rgba(255,255,255,.45)";ctx.setLineDash([8,8]);ctx.beginPath();ctx.moveTo(box.x+30,cy);ctx.lineTo(box.x+box.w-30,cy);ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle="#ff5cab";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(box.x+130,cy-115);ctx.quadraticCurveTo(cx-40,cy-15,cx,cy);ctx.quadraticCurveTo(cx+80,cy+80,cx+190,cy+135);ctx.stroke();arr(ctx,cx+120,cy+95,cx+190,cy+135,"#ff5cab",4);ctx.fillStyle="#e8f5ff";ctx.fillText("เบนเข้าหาบริเวณที่ช้ากว่า",box.x+70,box.y+box.h-28);} else if(mode==="soundDiffraction"){box=baseTopic(ctx,w,h,"Sound Diffraction (การเลี้ยวเบนของเสียง)");cx=w/2;cy=box.y+box.h*.52;let bx=cx-70;drawSpeaker(ctx,box.x+115,cy,.85);ctx.strokeStyle="rgba(255,255,255,.62)";ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(bx,box.y+45);ctx.lineTo(bx,cy-45);ctx.stroke();ctx.beginPath();ctx.moveTo(bx,cy+45);ctx.lineTo(bx,box.y+box.h-45);ctx.stroke();waves(ctx,bx,cy,8,34,"rgba(255,92,171,.88)");ctx.fillStyle="#e8f5ff";ctx.fillText("a ≈ λ → เลี้ยวเบนเด่น",cx+115,box.y+48);} else if(mode==="soundInterference"){box=baseTopic(ctx,w,h,"Sound Interference (การแทรกสอดของเสียง)");cx=w/2;cy=box.y+box.h*.52;let sx=box.x+150,s1=cy-70,s2=cy+70;drawSpeaker(ctx,sx,s1,.7);drawSpeaker(ctx,sx,s2,.7);for(let r=35;r<380;r+=35){ctx.strokeStyle=`rgba(34,211,238,${.45-r/900})`;ctx.beginPath();ctx.arc(sx,s1,r,0,Math.PI*2);ctx.stroke();ctx.strokeStyle=`rgba(255,92,171,${.43-r/900})`;ctx.beginPath();ctx.arc(sx,s2,r,0,Math.PI*2);ctx.stroke();}ctx.fillStyle="#e8f5ff";ctx.fillText("Δr = mλ (เสริม) / (m+1/2)λ (หักล้าง)",cx+10,box.y+48);} else if(mode==="shockWave"){let M=gNum("vizMach",1.5);lab("vizMachLabel",M.toFixed(2));box=baseTopic(ctx,w,h,"Shock Wave / Sonic Boom");cx=w/2;cy=box.y+box.h*.52;let th=Math.asin(1/Math.max(M,1.01)),sx=cx+80;ctx.font="bold 30px Sarabun";ctx.fillText("✈️",sx,cy);ctx.strokeStyle="#c084fc";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(sx,cy);ctx.lineTo(sx-330,cy-Math.tan(th)*330);ctx.stroke();ctx.beginPath();ctx.moveTo(sx,cy);ctx.lineTo(sx-330,cy+Math.tan(th)*330);ctx.stroke();ctx.fillText("sin θ = 1/M",sx-90,cy+76);} else if(mode==="soundIntensity"||mode==="soundIntensityLevel"){box=baseTopic(ctx,w,h,mode==="soundIntensity"?"Sound Intensity (ความเข้มเสียง)":"Sound Intensity Level (ระดับความเข้มเสียง)");cy=box.y+box.h*.46;let sx=box.x+130;drawSpeaker(ctx,sx,cy,.9);waves(ctx,sx,cy,7,44,"rgba(34,211,238,.65)");ctx.fillStyle="#e8f5ff";ctx.font="bold 18px Sarabun";ctx.textAlign="center";ctx.fillText(mode==="soundIntensity"?"I = P / 4πr² และ I ∝ 1/r²":"β = 10 log₁₀(I/I₀),  I₀ = 1.0×10⁻¹² W/m²",w/2,box.y+box.h-45);} else if(mode==="soundLevelHearing"){box=baseTopic(ctx,w,h,"Sound Level, Frequency and Hearing");ctx.fillStyle="rgba(34,211,238,.18)";roundRect(ctx,box.x+110,box.y+70,box.w-220,box.h-145,30);ctx.fill();ctx.fillStyle="#e8f5ff";ctx.textAlign="center";ctx.fillText("ช่วงการได้ยิน 20 Hz – 20 kHz | หูไวมากประมาณ 2–5 kHz",w/2,box.y+box.h-42);} else if(mode==="noisePollution"){box=baseTopic(ctx,w,h,"Noise Pollution and Protection");let base=box.y+box.h-80,left=box.x+90,right=box.x+box.w-90;[...Array(6)].forEach((_,i)=>{let x=left+i*(right-left)/5,bh=45+i*28;ctx.fillStyle=i>3?"rgba(255,77,109,.75)":i>2?"rgba(251,191,36,.72)":"rgba(34,211,238,.65)";roundRect(ctx,x-24,base-bh,48,bh,10);ctx.fill();});} else if(mode==="resonanceAirHarmonics"){box=baseTopic(ctx,w,h,"Resonance Air Column: Harmonic Modes");for(let row=0;row<3;row++){let y=box.y+80+row*85,left=box.x+120,right=box.x+box.w-120,pts=[];ctx.strokeStyle="rgba(255,255,255,.42)";ctx.strokeRect(left,y-25,right-left,50);for(let x=left;x<=right;x++){let u=(x-left)/(right-left)*Math.PI*(row*2+1);pts.push([x,y-Math.sin(u)*22]);}drawWaveLine(ctx,pts,row===0?"#22d3ee":row===1?"#a78bfa":"#ff5cab",3);}} else {box=baseTopic(ctx,w,h,"Applications of Sound");["แพทย์: อัลตราซาวด์","โซนาร์: ตรวจใต้น้ำ","Echolocation","อุตสาหกรรม"].forEach((s,i)=>{let x=box.x+80+(i%2)*box.w/2,y=box.y+80+Math.floor(i/2)*115;ctx.fillStyle="rgba(7,18,38,.8)";ctx.strokeStyle="rgba(34,211,238,.45)";roundRect(ctx,x,y,box.w/2-120,80,14);ctx.fill();ctx.stroke();ctx.fillStyle="#e8f5ff";ctx.fillText(s,x+20,y+45);});}}
+
 function drawVisualizer(){
   const c=$("visualizerCanvas"); if(!c) return;
   const ctx=c.getContext("2d");
@@ -1578,6 +1587,13 @@ function drawVisualizer(){
       const resetAt = Math.max(ps.dt + 0.45, 0.85);
       vizState.t = elapsed >= resetAt ? 0 : vizState.t + 1;
     }
+    vizState.raf=requestAnimationFrame(drawVisualizer);
+    return;
+  }
+
+  if(soundTopicModes.has(mode)){
+    drawSoundTopicPlaceholder(ctx,c,p,W,H,mode);
+    if(vizState.running) vizState.t += 1;
     vizState.raf=requestAnimationFrame(drawVisualizer);
     return;
   }
@@ -1635,6 +1651,13 @@ function drawVisualizer(){
         ctx.fillRect(x,mid-140,4,280);
       }
     }
+  }
+
+  if(soundTopicModes.has(mode)){
+    drawSoundTopicPlaceholder(ctx,c,p,W,H,mode);
+    if(vizState.running) vizState.t += 1;
+    vizState.raf=requestAnimationFrame(drawVisualizer);
+    return;
   }
 
   if(mode==="displacementPressure"){
@@ -1812,7 +1835,7 @@ function initVisualizer(){
       vizState.mode=btn.dataset.viz;
     };
   });
-  ["vizFreq","vizAmp","vizSpeed","vizTimeSpeed","vizPhase","vizPhaseDiff","vizSubMode","vizDistance","vizTemp"].forEach(id=>$(id)?.addEventListener("input",()=>{
+  ["vizFreq","vizAmp","vizSpeed","vizTimeSpeed","vizPhase","vizPhaseDiff","vizSubMode","vizDistance","vizTemp","vizAngle","vizTempDiff","vizSlit","vizSeparation","vizMach","vizPower","vizIntensity","vizLevel","vizProtection"].forEach(id=>$(id)?.addEventListener("input",()=>{
     getVizParams();
     if(typeof drawVisualizer === "function") drawVisualizer();
   }));
@@ -2032,9 +2055,10 @@ function resizeVisualizerCanvas(){
   const isLongitudinal = !!document.querySelector(".visualizerSinglePage[data-viz-mode='longitudinal']");
   const isDisplacementPressure = !!document.querySelector(".visualizerSinglePage[data-viz-mode='displacementPressure']");
   const isSpeedSound = !!document.querySelector(".visualizerSinglePage[data-viz-mode='speedSound']");
+  const isSoundTopic = !!document.querySelector('.visualizerSinglePage.soundTopicPage');
 
   let cssH;
-  if(isLongitudinal || isDisplacementPressure || isSpeedSound){
+  if(isLongitudinal || isDisplacementPressure || isSpeedSound || isSoundTopic){
     // v5.88: allow more vertical room on phones so the graph can visibly fill the slot.
     const vh = Math.max(640, window.innerHeight || 800);
     cssH = isLandscape ? Math.round(Math.min(vh * 0.66, cssW * 0.58)) : Math.round(vh * 0.52);

@@ -1,92 +1,23 @@
-<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MelodyLab</title><meta name="description" content="MelodyLab ห้องทดลองเสียงและเก็บข้อมูล ด้วยมือถือ"><meta name="theme-color" content="#0f172a"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="stylesheet" href="style.css"></head><body class="detailPage page-visualizer"><header><div class="wrap nav detailNav"><button class="backBtn" onclick="location.href='index.html'">←</button><a class="brand" href="index.html"><img src="icon-192.png" alt="MelodyLab"><span>Wave Visualizer</span></a></div></header>
-<main class="wrap detailMain" data-current="visualizer">
-  <section class="section activeDetail visualizerMenuPage" id="visualizer">
-    <div class="sectionHead visualizerMenuHead">
-      <div>
-        <h2>Wave Visualizer (ภาพจำลองคลื่น)</h2>
-      </div>
-    </div>
-    <div class="menuGrid visualizerSubGrid">
-      <a class="menuItem vizSubItem" href="visualizer_longitudinal.html">
-        <span class="vizSubIconWrap"><span class="icon">〰️</span></span>
-        <div class="vizSubText">
-          <h3>Longitudinal Wave (คลื่นตามยาว)</h3>
-          <p>สังเกตการสั่นของอนุภาคในแนวเดียวกับการเคลื่อนที่ของคลื่น</p>
-        </div>
-        <span class="vizSubArrow">›</span>
-      </a>
-      <a class="menuItem vizSubItem" href="visualizer_pressure.html">
-        <span class="vizSubIconWrap"><span class="icon">🔵</span></span>
-        <div class="vizSubText">
-          <h3>Pressure Wave (คลื่นความดัน)</h3>
-          <p>สังเกตบริเวณอัดแน่นและเบาบางของตัวกลาง</p>
-        </div>
-        <span class="vizSubArrow">›</span>
-      </a>
-      <a class="menuItem vizSubItem" href="visualizer_displacementPressure.html">
-        <span class="vizSubIconWrap"><span class="icon">📈</span></span>
-        <div class="vizSubText">
-          <h3>Displacement + Pressure (การกระจัด + ความดัน)</h3>
-          <p>เปรียบเทียบความสัมพันธ์ระหว่างการกระจัดกับความดัน</p>
-        </div>
-        <span class="vizSubArrow">›</span>
-      </a>
-      <a class="menuItem vizSubItem" href="visualizer_speedSound.html">
-        <div class="vizSubIcon">🛰️</div>
-        <div class="vizSubText">
-          <h3>Speed of Sound (อัตราเร็วเสียง)</h3>
-          <p>สังเกตความสัมพันธ์ระหว่างระยะทาง s เวลาที่เสียงเดินทาง และอัตราเร็วเสียง</p>
-        </div>
-      </a>
-      <a class="menuItem vizSubItem" href="visualizer_superposition.html">
-        <span class="vizSubIconWrap"><span class="icon">➕</span></span>
-        <div class="vizSubText">
-          <h3>Superposition (การซ้อนทับ)</h3>
-          <p>สังเกตผลรวมของคลื่นเมื่อคลื่นมากกว่า 1 ขบวนมาพบกัน</p>
-        </div>
-        <span class="vizSubArrow">›</span>
-      </a>
-      <a class="menuItem vizSubItem" href="visualizer_beatsViz.html">
-        <span class="vizSubIconWrap"><span class="icon">🎧</span></span>
-        <div class="vizSubText">
-          <h3>Beats (บีตส์)</h3>
-          <p>สังเกตการดัง–ค่อยสลับกันจากความถี่ใกล้เคียง</p>
-        </div>
-        <span class="vizSubArrow">›</span>
-      </a>
-      <a class="menuItem vizSubItem" href="visualizer_standingAir.html">
-        <span class="vizSubIconWrap"><span class="icon">🧪</span></span>
-        <div class="vizSubText">
-          <h3>Standing Wave (คลื่นนิ่ง)</h3>
-          <p>สังเกตตำแหน่งปมและปฏิบัพในคลื่นนิ่งของอากาศ</p>
-        </div>
-        <span class="vizSubArrow">›</span>
-      </a>
-      <a class="menuItem vizSubItem" href="visualizer_resonanceViz.html">
-        <span class="vizSubIconWrap"><span class="icon">🎯</span></span>
-        <div class="vizSubText">
-          <h3>Resonance (การสั่นพ้อง)</h3>
-          <p>สังเกตการตอบสนองมากเมื่อความถี่เหมาะสม</p>
-        </div>
-        <span class="vizSubArrow">›</span>
-      </a>
-      <a class="menuItem vizSubItem" href="visualizer_harmonicsViz.html">
-        <span class="vizSubIconWrap"><span class="icon">🎼</span></span>
-        <div class="vizSubText">
-          <h3>Harmonics / Timbre (ฮาร์มอนิก / คุณภาพเสียง)</h3>
-          <p>สังเกตองค์ประกอบฮาร์มอนิกที่ทำให้เสียงต่างกัน</p>
-        </div>
-        <span class="vizSubArrow">›</span>
-      </a>
-      <a class="menuItem vizSubItem" href="visualizer_dopplerViz.html">
-        <span class="vizSubIconWrap"><span class="icon">🌀</span></span>
-        <div class="vizSubText">
-          <h3>Doppler Effect (ปรากฏการณ์ดอปเพลอร์)</h3>
-          <p>สังเกตการเปลี่ยนความถี่เมื่อแหล่งกำเนิดหรือผู้สังเกตเคลื่อนที่</p>
-        </div>
-        <span class="vizSubArrow">›</span>
-      </a>
-    </div>
-  </section>
-</main>
-<script src="app.js"></script></body></html>
+<!DOCTYPE html><html 
+<a class="menuItem vizSubItem" href="visualizer_longitudinal.html"><div class="vizSubIcon">〰️</div><div class="vizSubText"><h3>1. Longitudinal Wave (คลื่นตามยาว)</h3><p>อนุภาคอากาศสั่นในแนวเดียวกับทิศทางคลื่น</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_pressure.html"><div class="vizSubIcon">🌬️</div><div class="vizSubText"><h3>2. Pressure Wave (คลื่นความดัน)</h3><p>ส่วนอัด–ส่วนขยายและความดันของเสียง</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_displacementPressure.html"><div class="vizSubIcon">📉</div><div class="vizSubText"><h3>3. Displacement and Pressure (คลื่นการกระจัดและคลื่นความดัน)</h3><p>เปรียบเทียบการกระจัดกับความดันและเฟส</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_speedSound.html"><div class="vizSubIcon">🛰️</div><div class="vizSubText"><h3>4. Speed of Sound (อัตราเร็วเสียง)</h3><p>วัดอัตราเร็วเสียงจากระยะทาง s และเวลา Δt</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_sound_reflection.html"><div class="vizSubIcon">↩️</div><div class="vizSubText"><h3>5. Sound Reflection (การสะท้อนของเสียง)</h3><p>มุมตกกระทบเท่ากับมุมสะท้อน</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_sound_refraction.html"><div class="vizSubIcon">🌡️</div><div class="vizSubText"><h3>6. Sound Refraction (การหักเหของเสียง)</h3><p>เสียงเบนเมื่ออัตราเร็วเสียงในบริเวณต่างกัน</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_sound_diffraction.html"><div class="vizSubIcon">🕳️</div><div class="vizSubText"><h3>7. Sound Diffraction (การเลี้ยวเบนของเสียง)</h3><p>เสียงผ่านช่องเปิดแล้วแผ่ออก</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_sound_interference.html"><div class="vizSubIcon">✳️</div><div class="vizSubText"><h3>8. Sound Interference (การแทรกสอดของเสียง)</h3><p>คลื่นสองแหล่งเกิดบริเวณเสริมและหักล้าง</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_superposition.html"><div class="vizSubIcon">➕</div><div class="vizSubText"><h3>9. Superposition (การซ้อนทับของคลื่น)</h3><p>ผลรวมของการกระจัดจากคลื่นสองขบวน</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_beatsViz.html"><div class="vizSubIcon">🎚️</div><div class="vizSubText"><h3>10. Beats (บีตส์)</h3><p>เสียงสองความถี่ใกล้กันดัง–ค่อยเป็นจังหวะ</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_standingAir.html"><div class="vizSubIcon">🎼</div><div class="vizSubText"><h3>11. Standing Wave (คลื่นนิ่ง)</h3><p>ปมและปฏิบัพจากคลื่นสวนทาง</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_resonanceViz.html"><div class="vizSubIcon">🔊</div><div class="vizSubText"><h3>12. Resonance in Air Column (การสั่นพ้องของอากาศในท่อ)</h3><p>การสั่นพ้องของอากาศในท่อ</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_resonance_air_harmonics.html"><div class="vizSubIcon">🎛️</div><div class="vizSubText"><h3>13. Resonance in Air Column: Harmonic Modes (การสั่นพ้องของอากาศในท่อ: โหมดฮาร์มอนิก)</h3><p>โหมดฮาร์มอนิกในท่อเปิดและท่อปิด</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_dopplerViz.html"><div class="vizSubIcon">🚗</div><div class="vizSubText"><h3>14. Doppler Effect (ปรากฏการณ์ดอปเพลอร์)</h3><p>ความถี่ที่ได้ยินเปลี่ยนเมื่อมีการเคลื่อนที่สัมพัทธ์</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_shock_wave.html"><div class="vizSubIcon">✈️</div><div class="vizSubText"><h3>15. Shock Wave / Sonic Boom (คลื่นกระแทกของเสียง)</h3><p>กรวยมัคและโซนิกบูมเมื่อแหล่งกำเนิดเร็วกว่าเสียง</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_sound_intensity.html"><div class="vizSubIcon">📈</div><div class="vizSubText"><h3>16. Sound Intensity (ความเข้มเสียง)</h3><p>ความเข้มเสียงลดตามกฎกำลังสองผกผัน</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_sound_intensity_level.html"><div class="vizSubIcon">📟</div><div class="vizSubText"><h3>17. Sound Intensity Level (ระดับความเข้มเสียง)</h3><p>สเกลลอการิทึมของความเข้มเสียงในหน่วย dB</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_sound_level_hearing.html"><div class="vizSubIcon">👂</div><div class="vizSubText"><h3>18. Sound Level, Frequency and Hearing (ระดับเสียงและความถี่เสียงกับการได้ยิน)</h3><p>ช่วงความถี่และระดับเสียงที่มนุษย์ได้ยิน</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_harmonicsViz.html"><div class="vizSubIcon">🎻</div><div class="vizSubText"><h3>19. Harmonics and Timbre (ฮาร์มอนิกและคุณภาพเสียง)</h3><p>ฮาร์มอนิก รูปคลื่น และคุณภาพเสียง</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_noise_pollution.html"><div class="vizSubIcon">🛡️</div><div class="vizSubText"><h3>20. Noise Pollution and Protection (มลพิษทางเสียงและการป้องกัน)</h3><p>เสียงรบกวนและแนวทางป้องกัน</p></div></a>
+<a class="menuItem vizSubItem" href="visualizer_applications_sound.html"><div class="vizSubIcon">🧭</div><div class="vizSubText"><h3>21. Applications of Sound (การประยุกต์ใช้ความรู้เรื่องเสียง)</h3><p>การใช้เสียงในแพทย์ โซนาร์ ธรรมชาติ และอุตสาหกรรม</p></div></a>
+>
