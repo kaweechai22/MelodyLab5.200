@@ -3045,3 +3045,9 @@ main.wrap{
   content:" ไม่ใช่ค่าการเบนจริง";
   color:#fbbf24;
 }
+
+
+/* v5.162 — final physics clean-up */
+#visualizer[data-viz-mode="soundRefraction"] .vizMediaFrame canvas{
+  image-rendering:auto;
+}

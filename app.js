@@ -332,6 +332,8 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
     const topHotter = tempTop > tempBottom;
     const bottomHotter = tempBottom > tempTop;
     const relationLabel = topHotter ? "ด้านบนอุณหภูมิสูงกว่า" : bottomHotter ? "ด้านล่างอุณหภูมิสูงกว่า" : "อุณหภูมิเท่ากัน";
+    const topTempLabel = noRefraction ? "ด้านบน" : (topTempLabel);
+    const bottomTempLabel = noRefraction ? "ด้านล่าง" : (bottomTempLabel);
     const behaviorText = noRefraction ? "ไม่เกิดการหักเหสุทธิ" : (vTop > vBottom ? "หักเหเข้าหาเส้นแนวฉาก" : "หักเหออกจากเส้นแนวฉาก");
     const effectivePreset = preset==="day" ? "day" : preset==="night" ? "night" : (bottomHotter ? "day" : topHotter ? "night" : "auto");
 
@@ -427,12 +429,8 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
       ctx.lineCap="round"; ctx.lineJoin="round";
       ctx.strokeStyle="rgba(255,92,171,.98)";
       ctx.lineWidth=4.2;
-      ctx.beginPath(); ctx.moveTo(rayStartX,rayStartY); ctx.lineTo(hitX,hitY); ctx.stroke();
-      coreArrow(ctx,rayStartX+(hitX-rayStartX)*0.55,rayStartY+(hitY-rayStartY)*0.55,hitX,hitY,"#ff5cab",4);
-      ctx.strokeStyle="rgba(124,255,124,.98)";
-      ctx.beginPath(); ctx.moveTo(hitX,hitY); ctx.lineTo(outX,outY); ctx.stroke();
-      coreArrow(ctx,outX-58,outY-22,outX,outY,"#7cff7c",4);
-      ctx.restore();
+      ctx.beginPath(); ctx.moveTo(rayStartX,rayStartY); ctx.lineTo(hitX,hitY); ctx.stroke();ctx.strokeStyle="rgba(124,255,124,.98)";
+      ctx.beginPath(); ctx.moveTo(hitX,hitY); ctx.lineTo(outX,outY); ctx.stroke();ctx.restore();
       coreDot(ctx, hitX, hitY, 6, "#ffffff");
 
       // refracted wavefronts using reflection-like repeated fronts, but physically perpendicular to refracted ray
@@ -467,9 +465,9 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
 
       // compact physical labels
       ctx.save(); ctx.textAlign="left";
-      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle= topHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(topHotter?"ด้านบนอุณหภูมิสูงกว่า":"ด้านบนอุณหภูมิต่ำกว่า", xR-258, top+44);
+      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle= topHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(topTempLabel, xR-258, top+44);
       ctx.font="11px Sarabun, system-ui"; ctx.fillText(`v₁ ≈ ${vTop.toFixed(1)} m/s`, xR-258, top+64); ctx.fillText(`λ₁ ≈ ${lambdaTop.toFixed(3)} m`, xR-258, top+81);
-      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle= bottomHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(bottomHotter?"ด้านล่างอุณหภูมิสูงกว่า":"ด้านล่างอุณหภูมิต่ำกว่า", xL+16, bottom-66);
+      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle= bottomHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(bottomTempLabel, xL+16, bottom-66);
       ctx.font="11px Sarabun, system-ui"; ctx.fillText(`v₂ ≈ ${vBottom.toFixed(1)} m/s`, xL+16, bottom-47); ctx.fillText(`λ₂ ≈ ${lambdaBottom.toFixed(3)} m`, xL+16, bottom-31);
       ctx.restore();
       ctx.save(); ctx.fillStyle="rgba(10,22,50,.86)"; ctx.strokeStyle="rgba(96,165,250,.34)"; roundRect(ctx,panel.x+28,panel.y+26,124,30,12); ctx.fill(); ctx.stroke(); ctx.fillStyle="#dbeafe"; ctx.font="bold 14px Sarabun, system-ui"; ctx.textAlign="center"; ctx.fillText(`f = ${freq.toFixed(0)} Hz`, panel.x+90, panel.y+46); ctx.restore();
@@ -539,7 +537,7 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
       // actual ray polyline
       ctx.save(); ctx.strokeStyle="rgba(255,92,171,.98)"; ctx.lineWidth=4.1; ctx.lineCap="round"; ctx.lineJoin="round";
       ctx.beginPath(); ctx.moveTo(displayPts[0].x, displayPts[0].y); for(let i=1;i<displayPts.length;i++) ctx.lineTo(displayPts[i].x, displayPts[i].y); ctx.stroke();
-      const pA=displayPts[displayPts.length-2]||displayPts[0], pB=displayPts[displayPts.length-1]; coreArrow(ctx,pA.x,pA.y,pB.x,pB.y,"#ff5cab",4); ctx.restore();
+      const pA=displayPts[displayPts.length-2]||displayPts[0], pB=displayPts[displayPts.length-1];ctx.restore();
       // local-angle labels are intentionally hidden in final display to keep the canvas clean
       const sampleIdx=[];
       // wavefronts along selected segments
@@ -565,10 +563,10 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
       if(vizState.running){ const nSeg=displayPts.length-1; const prog=(time*.05)%1; const fSeg=prog*nSeg; const idx=Math.min(nSeg-1, Math.floor(fSeg)); const u=fSeg-idx; const p1=displayPts[idx], p2=displayPts[idx+1]; coreDot(ctx,p1.x+(p2.x-p1.x)*u,p1.y+(p2.y-p1.y)*u,6,"#ff5cab"); }
       // side labels
       ctx.save(); ctx.textAlign="left";
-      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle = topHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(topHotter?"ด้านบนอุณหภูมิสูงกว่า":"ด้านบนอุณหภูมิต่ำกว่า", xR-290, top+56);
-      ctx.font="11px Sarabun, system-ui"; ctx.fillText(`v(top) ≈ ${vTop.toFixed(1)} m/s`, xR-290, top+80); ctx.fillText(`λ(top) ≈ ${lambdaTop.toFixed(3)} m`, xR-290, top+101);
-      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle = bottomHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(bottomHotter?"ด้านล่างอุณหภูมิสูงกว่า":"ด้านล่างอุณหภูมิต่ำกว่า", xL+16, bottom-74);
-      ctx.font="11px Sarabun, system-ui"; ctx.fillText(`v(bottom) ≈ ${vBottom.toFixed(1)} m/s`, xL+16, bottom-52); ctx.fillText(`λ(bottom) ≈ ${lambdaBottom.toFixed(3)} m`, xL+16, bottom-31); ctx.restore();
+      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle = topHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(topTempLabel, xR-290, top+56);
+      ctx.font="11px Sarabun, system-ui"; ctx.fillText(`v ≈ ${vTop.toFixed(1)} m/s`, xR-290, top+80); ctx.fillText(`λ ≈ ${lambdaTop.toFixed(3)} m`, xR-290, top+101);
+      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle = bottomHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(bottomTempLabel, xL+16, bottom-74);
+      ctx.font="11px Sarabun, system-ui"; ctx.fillText(`v ≈ ${vBottom.toFixed(1)} m/s`, xL+16, bottom-52); ctx.fillText(`λ ≈ ${lambdaBottom.toFixed(3)} m`, xL+16, bottom-31); ctx.restore();
       ctx.save(); ctx.fillStyle="rgba(10,22,50,.86)"; ctx.strokeStyle="rgba(96,165,250,.34)"; roundRect(ctx,panel.x+28,panel.y+26,124,30,12); ctx.fill(); ctx.stroke(); ctx.fillStyle="#dbeafe"; ctx.font="bold 14px Sarabun, system-ui"; ctx.textAlign="center"; ctx.fillText(`f = ${freq.toFixed(0)} Hz`, panel.x+90, panel.y+46); ctx.restore();
       ctx.save(); ctx.fillStyle="rgba(13,26,53,.84)"; ctx.strokeStyle="rgba(251,191,36,.36)"; roundRect(ctx,panel.x+160,panel.y+26,236,30,12); ctx.fill(); ctx.stroke(); ctx.fillStyle="#ffd166"; ctx.font="bold 12px Sarabun, system-ui"; ctx.textAlign="center"; ctx.fillText(`ขยายภาพ ×${bendBoost.toFixed(1)} (ไม่ใช่ค่าจริง)`, panel.x+278, panel.y+46); ctx.restore();
       ctx.save(); ctx.font="bold 12px Sarabun, system-ui"; ctx.textAlign="left"; ctx.fillStyle="#ff8fc2"; ctx.fillText("Multi-layer Ray", startX-12, startY-18); ctx.restore();
@@ -593,11 +591,15 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
       ctx.fillStyle="rgba(240,244,250,.86)"; ctx.font="bold 14px Sarabun, system-ui"; ctx.fillText("ground", xR-76, bottom-5);
       const srcX = xL+105, srcY = bottom-groundH-10; drawSpeaker(ctx, xL+14, srcY, .90);
       const p0 = {x:srcX, y:srcY};
-      const p1 = {x:srcX + 128*Math.sin(theta1), y:srcY - 128*Math.cos(theta1)};
+      let p1 = {x:srcX + 128*Math.sin(theta1), y:srcY - 128*Math.cos(theta1)};
       let p2, p3;
       const gradAmount = lim(Math.abs(tempBottom-tempTop)/45, 0, 1);
       if(noRefraction){
-        p2 = {x:srcX + 330, y:srcY - 145}; p3 = {x:xR-92, y:srcY - 238};
+        const endX = xR - 92;
+        const endY = lim(srcY - (endX-srcX)/Math.max(Math.tan(theta1),0.18), top+86, bottom-groundH-16);
+        p3 = {x:endX, y:endY};
+        p1 = {x:p0.x + (p3.x-p0.x)*0.34, y:p0.y + (p3.y-p0.y)*0.34};
+        p2 = {x:p0.x + (p3.x-p0.x)*0.68, y:p0.y + (p3.y-p0.y)*0.68};
       } else if(effectivePreset==="night"){
         // ด้านบนอุณหภูมิสูงกว่า / ใกล้พื้นเย็นกว่า → เสียงเบนลงใกล้พื้นชัดขึ้น
         p2 = {x:srcX + 320, y:srcY - (92 + 24*gradAmount)};
@@ -608,7 +610,7 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
         p3 = {x:xR-92, y:top + (108 - 40*gradAmount)};
       }
       // ray
-      ctx.save(); ctx.strokeStyle="rgba(255,92,171,.98)"; ctx.lineWidth=4; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.bezierCurveTo(p1.x,p1.y,p2.x,p2.y,p3.x,p3.y); ctx.stroke(); coreArrow(ctx,p3.x-42,p3.y-16,p3.x,p3.y,"#ff5cab",4); ctx.restore();
+      ctx.save(); ctx.strokeStyle="rgba(255,92,171,.98)"; ctx.lineWidth=4; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.bezierCurveTo(p1.x,p1.y,p2.x,p2.y,p3.x,p3.y); ctx.stroke();ctx.restore();
       // incident-style fronts near source
       for(let r=24, i=0; r<112 && i<7; r+=spacingBottom*0.95, i++){
         const alpha=lim(0.38-i*0.028,0.18,0.38);
@@ -625,13 +627,31 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
         drawWaveCurve(p.x,p.y,t.x,t.y,segLen,6,`rgba(124,255,124,${alpha})`,1.95);
       }
       // labels
-      ctx.save(); ctx.textAlign="center"; ctx.font="bold 13px Sarabun, system-ui"; ctx.fillStyle="rgba(67,201,255,.96)"; ctx.fillText("แนวคลื่นตกกระทบ", srcX+86, srcY-110); ctx.fillStyle="rgba(124,255,124,.95)"; const mid=bezierPoint(0.60,p0,p1,p2,p3); ctx.fillText("แนวคลื่นหักเห", mid.x+34, mid.y-18); ctx.restore();
+      ctx.save(); ctx.textAlign="center"; ctx.font="bold 13px Sarabun, system-ui"; ctx.fillStyle="rgba(67,201,255,.96)"; ctx.fillText("แนวคลื่นเริ่มต้น", srcX+86, srcY-110); ctx.fillStyle="rgba(124,255,124,.95)"; const mid=bezierPoint(0.60,p0,p1,p2,p3); ctx.fillText(noRefraction ? "แนวคลื่นเสียง" : "แนวคลื่นหักเห", mid.x+34, mid.y-18); ctx.restore();
       if(vizState.running){ const u=(time*.055)%1; const p=bezierPoint(u,p0,p1,p2,p3); coreDot(ctx,p.x,p.y,6,"#ff5cab"); }
-      ctx.save(); ctx.textAlign="left";
-      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle = topHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(topHotter?"ด้านบนอุณหภูมิสูงกว่า":"ด้านบนอุณหภูมิต่ำกว่า", xR-288, top+84); ctx.font="11px Sarabun, system-ui"; ctx.fillText(`v(top) ≈ ${vTop.toFixed(1)} m/s`, xR-288, top+106); ctx.fillText(`λ(top) ≈ ${lambdaTop.toFixed(3)} m`, xR-288, top+127);
-      ctx.font="bold 12px Sarabun, system-ui"; ctx.fillStyle = bottomHotter ? "#ff98a8" : "#4fdcff"; ctx.fillText(bottomHotter?"ด้านล่างอุณหภูมิสูงกว่า":"ด้านล่างอุณหภูมิต่ำกว่า", xL+16, bottom-74); ctx.font="11px Sarabun, system-ui"; ctx.fillText(`v(bottom) ≈ ${vBottom.toFixed(1)} m/s`, xL+16, bottom-52); ctx.fillText(`λ(bottom) ≈ ${lambdaBottom.toFixed(3)} m`, xL+16, bottom-31); ctx.restore();
+      ctx.save();
+      const topInfoX = xL + (xR-xL)*0.56;
+      const bottomInfoX = xL + 190;
+      ctx.textAlign="center";
+      ctx.font="bold 12px Sarabun, system-ui";
+      ctx.fillStyle = topHotter ? "#ff98a8" : noRefraction ? "#dbeafe" : "#4fdcff";
+      ctx.fillText(topTempLabel, topInfoX, top+50);
+      ctx.font="11px Sarabun, system-ui";
+      ctx.fillText(`v ≈ ${vTop.toFixed(1)} m/s`, topInfoX, top+70);
+      ctx.fillText(`λ ≈ ${lambdaTop.toFixed(3)} m`, topInfoX, top+87);
+      ctx.textAlign="left";
+      ctx.font="bold 12px Sarabun, system-ui";
+      ctx.fillStyle = bottomHotter ? "#ff98a8" : noRefraction ? "#dbeafe" : "#4fdcff";
+      ctx.fillText(bottomTempLabel, bottomInfoX, bottom-66);
+      ctx.font="11px Sarabun, system-ui";
+      ctx.fillText(`v ≈ ${vBottom.toFixed(1)} m/s`, bottomInfoX, bottom-47);
+      ctx.fillText(`λ ≈ ${lambdaBottom.toFixed(3)} m`, bottomInfoX, bottom-30);
+      ctx.restore();
       ctx.save(); ctx.fillStyle="rgba(10,22,50,.86)"; ctx.strokeStyle="rgba(96,165,250,.34)"; roundRect(ctx,panel.x+28,panel.y+26,124,30,12); ctx.fill(); ctx.stroke(); ctx.fillStyle="#dbeafe"; ctx.font="bold 14px Sarabun, system-ui"; ctx.textAlign="center"; ctx.fillText(`f = ${freq.toFixed(0)} Hz`, panel.x+90, panel.y+46); ctx.restore();
-      drawBadge(xR-206, top+56, 190, 108, "อุณหภูมิไล่ระดับ", [topHotter ? "ด้านบนสูงกว่า → เบนลง" : bottomHotter ? "ด้านล่างสูงกว่า → เบนขึ้น" : "อุณหภูมิเท่ากัน", "ภาพเชิงแนวคิด"]);
+      const gradientBadgeLines = noRefraction
+        ? ["อุณหภูมิเท่ากัน", "ไม่เกิดการหักเห", "แนวรังสีเป็นเส้นตรง"]
+        : [topHotter ? "ด้านบนสูงกว่า → เบนลง" : "ด้านล่างสูงกว่า → เบนขึ้น", "ภาพเชิงแนวคิด"];
+      drawBadge(xR-206, top+56, 190, noRefraction?124:108, "อุณหภูมิไล่ระดับ", gradientBadgeLines);
     }
 
   } else if(mode==="soundDiffraction"){
