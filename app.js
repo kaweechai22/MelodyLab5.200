@@ -597,25 +597,42 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
       ctx.fillStyle="rgba(240,244,250,.86)"; ctx.font="bold 14px Sarabun, system-ui"; ctx.fillText("ground", xR-76, bottom-5);
       const srcX = xL+132, srcY = bottom-groundH-10; drawSpeaker(ctx, xL+6, srcY, .78);
       const p0 = {x:srcX, y:srcY};
-      let p1, p2, p3;
       const gradAmount = lim(Math.abs(tempBottom-tempTop)/45, 0, 1);
-      const endX = xR - 92;
-      const straightEndY = lim(srcY - (endX-srcX)/Math.max(Math.tan(theta1),0.18), top+86, bottom-groundH-16);
-      const straightP1 = {x:p0.x + (endX-p0.x)*0.34, y:p0.y + (straightEndY-p0.y)*0.34};
-      const straightP2 = {x:p0.x + (endX-p0.x)*0.68, y:p0.y + (straightEndY-p0.y)*0.68};
+      const targetY = top + 82;
+      const maxSteps = 30;
+      const speedAtY = y => {
+        const frac = lim((y-top)/skyH, 0, 1);
+        return 331 + 0.6*(tempTop + (tempBottom-tempTop)*frac);
+      };
+      const straightAtY = y => p0.x + (p0.y-y)*Math.tan(theta1);
+      const vStartGrad = Math.max(speedAtY(p0.y), 1);
+      const snellConst = Math.sin(theta1) / vStartGrad;
 
-      if(noRefraction){
-        p3 = {x:endX, y:straightEndY};
-        p1 = straightP1;
-        p2 = straightP2;
-      } else {
-        // pedagogical trend: bottom hotter -> bends upward, top hotter -> bends downward
-        const trendDir = bottomHotter ? -1 : 1; // y-axis downward
-        const bendMag = lim(70 + Math.abs(tempBottom-tempTop)*2.7*(bendBoost/3.5), 70, 190);
-        p3 = {x:endX, y:lim(straightEndY + trendDir*bendMag, top+70, bottom-groundH-18)};
-        p1 = {x:straightP1.x, y:straightP1.y + trendDir*bendMag*0.25};
-        p2 = {x:straightP2.x, y:straightP2.y + trendDir*bendMag*0.85};
+      // Build the physical ray by treating the continuous temperature field as many very thin horizontal layers.
+      // sin(theta)/v is conserved locally; theta is measured from the local normal.
+      const rawPts = [{x:p0.x, y:p0.y, theta:theta1}];
+      let currX = p0.x, currY = p0.y;
+      const stepY = (p0.y-targetY) / maxSteps;
+      for(let i=1;i<=maxSteps;i++){
+        const nextY = p0.y - stepY*i;
+        const midY = (currY + nextY) * 0.5;
+        const vLocal = speedAtY(midY);
+        const thetaLocal = noRefraction ? theta1 : Math.asin(lim(snellConst*vLocal, -0.98, 0.98));
+        const dy = currY - nextY;
+        currX += dy * Math.tan(thetaLocal);
+        currY = nextY;
+        rawPts.push({x:currX, y:currY, theta:thetaLocal});
+        if(currX > xR-58) break;
       }
+
+      // Keep the physically computed trend, but visually amplify only the deviation from the straight guide.
+      const gradVisualBoost = noRefraction ? 1 : lim(1 + gradAmount*2.2, 1.25, 2.85);
+      const displayPts = rawPts.map(p=>{
+        const sx = straightAtY(p.y);
+        return {x:lim(sx + (p.x-sx)*gradVisualBoost, xL+24, xR-36), y:p.y, theta:p.theta};
+      });
+      const lastPt = displayPts[displayPts.length-1];
+      const guideEndX = straightAtY(lastPt.y);
 
       // straight guide so students can compare bending trend
       if(!noRefraction){
@@ -625,36 +642,64 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
         ctx.lineWidth=2;
         ctx.beginPath();
         ctx.moveTo(p0.x,p0.y);
-        ctx.lineTo(endX,straightEndY);
+        ctx.lineTo(guideEndX,lastPt.y);
         ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle="rgba(235,245,255,.78)";
         ctx.font="12px Sarabun, system-ui";
         ctx.textAlign="left";
-        ctx.fillText("แนวเดิม", endX-58, straightEndY-10);
+        ctx.fillText("แนวเดิม", guideEndX-58, lastPt.y-10);
         ctx.restore();
       }
 
       // ray
-      ctx.save(); ctx.strokeStyle="rgba(255,92,171,.98)"; ctx.lineWidth=4; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.bezierCurveTo(p1.x,p1.y,p2.x,p2.y,p3.x,p3.y); ctx.stroke();ctx.restore();
+      ctx.save();
+      ctx.strokeStyle="rgba(255,92,171,.98)";
+      ctx.lineWidth=4;
+      ctx.lineCap="round";
+      ctx.lineJoin="round";
+      ctx.beginPath();
+      ctx.moveTo(displayPts[0].x, displayPts[0].y);
+      for(let i=1;i<displayPts.length;i++) ctx.lineTo(displayPts[i].x, displayPts[i].y);
+      ctx.stroke();
+      ctx.restore();
+
       // incident-style fronts near source
       for(let r=24, i=0; r<112 && i<7; r+=spacingBottom*0.95, i++){
         const alpha=lim(0.38-i*0.028,0.18,0.38);
         drawArcFront(srcX-18, srcY-8, r, -1.38, -0.10, `rgba(29,150,255,${alpha})`, 1.85);
       }
-      // refracted fronts along curve: smooth, evenly spaced, perpendicular to local tangent
-      const uList=[0.10,0.19,0.29,0.40,0.52,0.64,0.76,0.88];
-      for(let i=0;i<uList.length;i++){
-        const u=uList[i];
-        const p = bezierPoint(u,p0,p1,p2,p3), t = bezierTan(u,p0,p1,p2,p3);
-        const interp = lambdaBottom + (lambdaTop-lambdaBottom)*u;
+
+      // wavefronts along the ray, perpendicular to the local tangent
+      for(let i=3;i<displayPts.length-1;i+=4){
+        const a=displayPts[i-1], b=displayPts[i+1];
+        const p=displayPts[i];
+        const interp = lambdaBottom + (lambdaTop-lambdaBottom) * lim((p0.y-p.y)/(p0.y-targetY), 0, 1);
         const segLen = lim(42 + interp*28, 42, 58);
-        const alpha=lim(0.44-i*0.026,0.17,0.44);
-        drawWaveCurve(p.x,p.y,t.x,t.y,segLen,6,`rgba(124,255,124,${alpha})`,1.95);
+        const alpha=lim(0.44-i*0.014,0.17,0.44);
+        drawWaveCurve(p.x,p.y,b.x-a.x,b.y-a.y,segLen,5,`rgba(124,255,124,${alpha})`,1.95);
       }
+
       // labels
-      ctx.save(); ctx.textAlign="center"; ctx.font="bold 13px Sarabun, system-ui"; ctx.fillStyle="rgba(67,201,255,.96)"; ctx.fillText("แนวคลื่นเริ่มต้น", srcX+86, srcY-110); ctx.fillStyle="rgba(124,255,124,.95)"; const mid=bezierPoint(0.60,p0,p1,p2,p3); ctx.fillText(noRefraction ? "แนวคลื่นเสียง" : "แนวคลื่นหักเห", mid.x+34, mid.y-18); ctx.restore();
-      if(vizState.running){ const u=(time*.055)%1; const p=bezierPoint(u,p0,p1,p2,p3); coreDot(ctx,p.x,p.y,6,"#ff5cab"); }
+      ctx.save();
+      ctx.textAlign="center";
+      ctx.font="bold 13px Sarabun, system-ui";
+      ctx.fillStyle="rgba(67,201,255,.96)";
+      ctx.fillText("แนวคลื่นเริ่มต้น", srcX+86, srcY-110);
+      ctx.fillStyle="rgba(124,255,124,.95)";
+      const mid = displayPts[Math.max(1, Math.floor(displayPts.length*0.58))];
+      ctx.fillText(noRefraction ? "แนวคลื่นเสียง" : "แนวคลื่นหักเห", mid.x+34, mid.y-18);
+      ctx.restore();
+
+      if(vizState.running){
+        const nSeg=displayPts.length-1;
+        const prog=(time*.055)%1;
+        const fSeg=prog*nSeg;
+        const idx=Math.min(nSeg-1, Math.floor(fSeg));
+        const u=fSeg-idx;
+        const a=displayPts[idx], b=displayPts[idx+1];
+        coreDot(ctx,a.x+(b.x-a.x)*u,a.y+(b.y-a.y)*u,6,"#ff5cab");
+      }
       ctx.save();
       const topInfoX = xL + (xR-xL)*0.56;
       const bottomInfoX = xL + 216;
@@ -676,8 +721,8 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
       ctx.save(); ctx.fillStyle="rgba(10,22,50,.86)"; ctx.strokeStyle="rgba(96,165,250,.34)"; roundRect(ctx,panel.x+28,panel.y+26,124,30,12); ctx.fill(); ctx.stroke(); ctx.fillStyle="#dbeafe"; ctx.font="bold 14px Sarabun, system-ui"; ctx.textAlign="center"; ctx.fillText(`f = ${freq.toFixed(0)} Hz`, panel.x+90, panel.y+46); ctx.restore();
       const gradientBadgeLines = noRefraction
         ? ["อุณหภูมิเท่ากัน", "ไม่เกิดการหักเห", "แนวรังสีเป็นเส้นตรง"]
-        : [topHotter ? "ด้านบนสูงกว่า → เบนลง" : "ด้านล่างสูงกว่า → เบนขึ้น", "เส้นประ = แนวเดิม", "ภาพเชิงแนวคิด"];
-      drawBadge(xR-190, top+44, 174, noRefraction?116:124, "อุณหภูมิไล่ระดับ", gradientBadgeLines);
+        : [topHotter ? "เบนเข้าหาด้านล่างที่ช้ากว่า" : "เบนเข้าหาด้านบนที่ช้ากว่า", "เส้นประ = แนวเดิม", "ภาพเชิงแนวคิด"];
+      drawBadge(xR-206, top+44, 190, noRefraction?116:124, "อุณหภูมิไล่ระดับ", gradientBadgeLines);
     }
 
   } else if(mode==="soundDiffraction"){
@@ -717,9 +762,9 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
     const n=Math.round(vNum("vizTubeMode",2)), typ=vSel("vizSubMode","open"); vText("vizTubeModeLabel",String(n)); vText("vizSubModeLabel",typ);
     panel=corePanel(ctx,w,h,"Standing Wave (คลื่นนิ่ง)"); const left=panel.x+105,right=panel.x+panel.w-105,y=panel.y+panel.h*.50,W=right-left;
     ctx.strokeStyle="rgba(255,255,255,.44)"; ctx.lineWidth=3; roundRect(ctx,left,y-48,W,96,16); ctx.stroke();
-    const pts=[]; for(let i=0;i<=W;i+=4){ const x=left+i, u=i/W; let shape=typ==="closed"?Math.sin((2*n-1)*Math.PI*u/2):Math.sin(n*Math.PI*u); pts.push([x,y-shape*55*Math.sin(time*3)]); } coreWaveLine(ctx,pts,"#22d3ee",3.2);
+    const pts=[]; for(let i=0;i<=W;i+=4){ const x=left+i, u=i/W; let shape=typ==="closed"?Math.sin((2*n-1)*Math.PI*u/2):Math.cos(n*Math.PI*u); pts.push([x,y-shape*55*Math.sin(time*3)]); } coreWaveLine(ctx,pts,"#22d3ee",3.2);
     for(let k=0;k<=n;k++){ const x=left+(k/n)*W; coreDot(ctx,x,y,4,k%2?"#ff5cab":"#22d3ee"); }
-    coreMetricCard(ctx,panel.x+38,panel.y+panel.h-100,230,76,"โหมดคลื่นนิ่ง",`${typ}, n=${n}`,"ปมและปฏิบัพสลับกัน","#22d3ee");
+    coreMetricCard(ctx,panel.x+38,panel.y+panel.h-100,260,76,"โหมดคลื่นนิ่ง",`${typ}, n=${n}`,"กราฟนี้แสดงการกระจัดของอากาศ","#22d3ee");
 
   } else if(mode==="resonanceViz" || mode==="resonanceAirHarmonics"){
     const n=Math.round(vNum("vizTubeMode",1)), L=vNum("vizLength",.8), typ=vSel("vizSubMode","closed"), f=vNum("vizFreq",440);
@@ -736,10 +781,10 @@ function drawRebuiltTopic(ctx,c,p,w,h,mode){
       }
     }
     const fn = typ==="closed" ? ((2*modeN-1)*343/(4*L)) : (modeN*343/(2*L));
-    const pts=[]; for(let i=0;i<=W;i+=4){ const u=i/W; const k=typ==="closed"?(2*modeN-1)*Math.PI/2:modeN*Math.PI; pts.push([left+i,y-Math.sin(k*u)*54*Math.sin(time*3)]); } coreWaveLine(ctx,pts,"#22d3ee",3.2);
+    const pts=[]; for(let i=0;i<=W;i+=4){ const u=i/W; const k=typ==="closed"?(2*modeN-1)*Math.PI/2:modeN*Math.PI; const shape=typ==="closed"?Math.sin(k*u):Math.cos(k*u); pts.push([left+i,y-shape*54*Math.sin(time*3)]); } coreWaveLine(ctx,pts,"#22d3ee",3.2);
     const response=mode==="resonanceViz"?Math.exp(-Math.pow((f-fn)/(Math.max(18,fn*.10)),2)):.85; coreBar(ctx,panel.x+330,panel.y+panel.h-75,360,14,response,"#fbbf24");
     const formula = typ==="closed" ? "fₙ=(2n−1)v/4L" : "fₙ=nv/2L";
-    coreMetricCard(ctx,panel.x+38,panel.y+panel.h-104,280,80,"โหมดในท่อ",`${formula}` ,`n=${modeN}, fₙ≈${fn.toFixed(0)} Hz`,"#fbbf24");
+    coreMetricCard(ctx,panel.x+38,panel.y+panel.h-104,300,80,"โหมดในท่อ",`${formula}` ,`การกระจัดอากาศ: n=${modeN}, fₙ≈${fn.toFixed(0)} Hz`,"#fbbf24");
 
   } else if(mode==="dopplerViz"){
     const vs=vNum("vizSpeed",.35), f=vNum("vizFreq",520); vText("vizSpeedLabel",vs.toFixed(2)+" v"); vText("vizFreqLabel",f.toFixed(0)+" Hz");
@@ -2711,6 +2756,63 @@ function setEchoSample(sample){
   });
 }
 
+
+function showCanvasImageSheet(dataUrl, filename){
+  try{
+    let sheet = document.getElementById("pngSaveSheet");
+    if(!sheet){
+      sheet = document.createElement("div");
+      sheet.id = "pngSaveSheet";
+      sheet.className = "pngSaveSheet";
+      sheet.innerHTML = `
+        <div class="pngSaveCard">
+          <div class="pngSaveTitle">บันทึกภาพจำลอง</div>
+          <div class="pngSaveHint">ถ้าปุ่มดาวน์โหลดไม่ทำงาน ให้แตะค้างที่ภาพแล้วเลือกบันทึกภาพ</div>
+          <img alt="ภาพจำลองที่บันทึก" />
+          <div class="pngSaveActions">
+            <button type="button" class="secondary pngCloseBtn">ปิด</button>
+          </div>
+        </div>`;
+      document.body.appendChild(sheet);
+      const closeBtn = sheet.querySelector(".pngCloseBtn");
+      if(closeBtn) closeBtn.onclick = ()=>sheet.classList.remove("show");
+      sheet.addEventListener("click", e=>{ if(e.target===sheet) sheet.classList.remove("show"); });
+    }
+    const img = sheet.querySelector("img");
+    if(img){
+      img.src = dataUrl;
+      img.setAttribute("download", filename || "melodylab-image.png");
+    }
+    sheet.classList.add("show");
+  }catch(e){}
+}
+
+function saveVisualizerPng(){
+  const c = $("visualizerCanvas");
+  if(!c) return;
+  try{
+    // redraw the current frame first so the saved PNG matches the latest parameters
+    if(vizState.raf) cancelAnimationFrame(vizState.raf);
+    if(typeof drawVisualizer === "function") drawVisualizer();
+  }catch(e){}
+  const filename = makeTopicFileName("Image", "png");
+  try{
+    const dataUrl = c.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = filename;
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ try{ a.remove(); }catch(e){} }, 800);
+    // Always show an in-app fallback preview because some mobile browsers ignore download=
+    showCanvasImageSheet(dataUrl, filename);
+  }catch(err){
+    alert("บันทึกภาพไม่ได้ในเบราว์เซอร์นี้ กรุณาใช้ปุ่มแคปหน้าจอของเครื่อง หรือเปิดใน Chrome/Safari");
+  }
+}
+
+
 function initVisualizer(){
   if(!$("visualizerCanvas")) return;
   const activeVizSection=document.querySelector(".visualizerSinglePage[data-viz-mode]");
@@ -2878,13 +2980,8 @@ function initVisualizer(){
   if($("vizPlayBtn")) $("vizPlayBtn").onclick=()=>{vizState.running=true;updateVizPlayerButtons("play");if(vizState.raf) cancelAnimationFrame(vizState.raf);drawVisualizer();};
   if($("vizPauseBtn")) $("vizPauseBtn").onclick=()=>{vizState.running=false;updateVizPlayerButtons("pause");drawVisualizer();};
   if($("vizResetBtn")) $("vizResetBtn").onclick=()=>{vizState.t=0;vizState.running=false;updateVizPlayerButtons("reset");if(vizState.raf) cancelAnimationFrame(vizState.raf);drawVisualizer();};
-  if($("vizExportBtn")) $("vizExportBtn").onclick=()=>{
-    const c=$("visualizerCanvas");
-    const a=document.createElement("a");
-    a.href=c.toDataURL("image/png");
-    a.download=makeTopicFileName("Image", "png");
-    a.click();
-  };
+  if($("vizScreenBtn")) $("vizScreenBtn").onclick=saveVisualizerPng;
+  if($("vizExportBtn")) $("vizExportBtn").onclick=saveVisualizerPng;
   if(vizState.raf) cancelAnimationFrame(vizState.raf);
   updateVizPlayerButtons();
   drawVisualizer();

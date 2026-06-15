@@ -3101,3 +3101,65 @@ main.wrap{
     padding:7px 6px !important;
   }
 }
+
+
+/* v5.165 — in-app PNG capture fallback for mobile browsers */
+#visualizer[data-viz-mode="soundRefraction"] .playerShot{
+  border-color:rgba(56,189,248,.60) !important;
+  background:rgba(8,20,44,.82) !important;
+}
+#visualizer[data-viz-mode="soundRefraction"] .playerShot .playerGlyph{
+  font-size:1.04rem !important;
+}
+.pngSaveSheet{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(2,6,23,.76);
+  backdrop-filter:blur(10px);
+}
+.pngSaveSheet.show{
+  display:flex;
+}
+.pngSaveCard{
+  width:min(92vw,720px);
+  max-height:92vh;
+  overflow:auto;
+  border:1px solid rgba(56,189,248,.38);
+  border-radius:22px;
+  padding:14px;
+  background:linear-gradient(180deg,rgba(8,20,44,.96),rgba(3,7,18,.96));
+  box-shadow:0 24px 80px rgba(0,0,0,.55),0 0 40px rgba(34,211,238,.18);
+}
+.pngSaveTitle{
+  font-weight:900;
+  font-size:1.05rem;
+  color:#e0f2fe;
+  margin-bottom:4px;
+}
+.pngSaveHint{
+  font-size:.82rem;
+  line-height:1.35;
+  color:#a7c7e7;
+  margin-bottom:10px;
+}
+.pngSaveCard img{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:16px;
+  border:1px solid rgba(148,163,184,.18);
+  background:#020617;
+}
+.pngSaveActions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:10px;
+}
+.pngCloseBtn{
+  min-height:38px;
+}
