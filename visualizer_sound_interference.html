@@ -1,14 +1,68 @@
-<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MelodyLab v5.116 - Sound Interference (การแทรกสอดของเสียง)</title><meta name="description" content="MelodyLab ห้องทดลองเสียงและเก็บข้อมูล ด้วยมือถือ"><meta name="theme-color" content="#0f172a"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="stylesheet" href="style.css"><meta name="melodylab-build-version" content="v5.116-clean-release"></head><body class="detailPage page-visualizer"><header><div class="wrap nav detailNav"><button class="backBtn" onclick="location.href='visualizer.html'">←</button><a class="brand" href="index.html"><img src="icon-192.png" alt="MelodyLab"><span>Sound Interference (การแทรกสอดของเสียง)</span></a></div></header>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MelodyLab v5.188 - Sound Interference (การแทรกสอดของเสียง)</title>
+  <meta name="description" content="MelodyLab ห้องทดลองเสียงและเก็บข้อมูล ด้วยมือถือ">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+  <meta name="melodylab-build-version" content="v5.188-base167-double-slit-interference-physics-audit">
+  <style>
+    .interferenceReadoutBar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+    .interferenceReadoutBar>div{border:1px solid rgba(148,163,184,.18);background:rgba(15,23,42,.48);border-radius:14px;padding:9px 11px;min-height:56px}
+    .interferenceReadoutBar label{display:block;color:#94a3b8;font-size:.78rem;line-height:1.2;margin-bottom:4px}
+    .interferenceReadoutBar b{display:block;color:#e5eef8;font-size:1rem;line-height:1.18}
+    .compactInterferenceNote{margin-top:8px;color:#9fb4ca;font-size:.84rem;line-height:1.45}
+    .guideControl{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-width:126px}
+    .guideSwitch{position:relative;display:inline-flex;width:54px;height:30px;cursor:pointer}
+    .guideSwitch input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .guideSlider{position:absolute;inset:0;border-radius:999px;background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.28);box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+    .guideSlider::before{content:'';position:absolute;left:4px;top:4px;width:20px;height:20px;border-radius:50%;background:#f8fafc;transition:transform .18s ease, background .18s ease}
+    .guideSwitch input:checked + .guideSlider{background:linear-gradient(135deg,rgba(56,189,248,.32),rgba(96,165,250,.28));border-color:rgba(56,189,248,.46)}
+    .guideSwitch input:checked + .guideSlider::before{transform:translateX(24px);background:#38bdf8}
+    .neonParamRow .paramIcon{color:#f8fafc;border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 24px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.10)}
+    .sepRow .paramIcon{background:linear-gradient(135deg,#14b8a6,#06b6d4)}
+    .freqRow .paramIcon{background:linear-gradient(135deg,#38bdf8,#3b82f6)}
+    .tempRow .paramIcon{background:linear-gradient(135deg,#fb923c,#f59e0b)}
+    .phaseRow .paramIcon{background:linear-gradient(135deg,#a855f7,#ec4899)}
+    .ampRow .paramIcon{background:linear-gradient(135deg,#22c55e,#86efac)}
+    .timeRow .paramIcon{background:linear-gradient(135deg,#a855f7,#c084fc)}
+    .guideRow .paramIcon{background:linear-gradient(135deg,#64748b,#94a3b8)}
+    .guideRow .valueBadge{min-width:44px;text-align:center;border-color:rgba(148,163,184,.28)}
+    .explainDetails summary{font-size:1.05rem}
+    .templateInsightCard li{line-height:1.55}
+    @media(max-width:760px){
+      .interferenceReadoutBar{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .interferenceReadoutBar>div{min-height:auto;padding:9px 10px}
+      .interferenceReadoutBar>div:last-child{grid-column:1/-1}
+      .guideControl{justify-content:flex-start;width:100%;margin-top:10px}
+    }
+  </style>
+</head>
+<body class="detailPage page-visualizer">
+<header>
+  <div class="wrap nav detailNav">
+    <button class="backBtn" onclick="location.href='visualizer.html'" aria-label="กลับ">←</button>
+    <a class="brand" href="index.html"><img src="icon-192.png" alt="MelodyLab"><span>Sound Interference (การแทรกสอดของเสียง)</span></a>
+  </div>
+</header>
 <main class="wrap detailMain" data-current="visualizer">
 <section class="section activeDetail visualizerSinglePage visualizerTemplatePage longitudinalFocusPage rebuiltTopicPage" id="visualizer" data-viz-mode="soundInterference">
   <div class="sectionHead templateHead">
-    <div><h2>Sound Interference (การแทรกสอดของเสียง)</h2><p class="sectionLead">คลื่นเสียงจากสองแหล่งรวมกันเกิดบริเวณเสริมกันและหักล้างกัน</p></div>
+    <div>
+      <h2>Sound Interference (การแทรกสอดของเสียง)</h2>
+      <p class="sectionLead">การแทรกสอดของเสียงในหน้านี้พิจารณาให้คลื่นเสียงจากลำโพงทางซ้ายเดินทางผ่านช่องแคบคู่ จากนั้นช่องเปิดทั้งสองทำหน้าที่เสมือนแหล่งกำเนิดย่อยที่มีเฟสสัมพันธ์กัน จึงเกิดตำแหน่งเสียงดังและเสียงเบาสลับกันบนแนวผู้ฟังตามผลต่างทางเดินคลื่น Δr ความยาวคลื่น λ และความต่างเฟส Δφ</p>
+    </div>
   </div>
   <div class="visualizerTemplateGrid longitudinalFocusGrid">
     <div class="card mainViz templateMainViz longitudinalMainViz">
       <div class="vizMediaFrame">
-        <div class="vizSingleModeLabel"><span>✳️</span> Sound Interference (การแทรกสอดของเสียง)</div>
-        <canvas id="visualizerCanvas" width="1200" height="440"></canvas>
+        <div class="vizSingleModeLabel"><span>✳️</span> Sound Interference</div>
+        <canvas id="visualizerCanvas" width="1200" height="440" aria-label="ภาพจำลองการแทรกสอดของเสียงผ่านช่องแคบคู่"></canvas>
         <div class="vizPlayerBar embeddedPlayerBar" aria-label="ปุ่มควบคุมภาพจำลอง">
           <div class="playerCluster playerCenter playerCenterOnly">
             <button id="vizPlayBtn" class="playerBtn playerPrimary playerPlay" title="เล่น" aria-label="เล่น"><span class="playerGlyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6.5v11l9-5.5-9-5.5z"/></svg></span></button>
@@ -17,46 +71,205 @@
           </div>
         </div>
       </div>
-      <details class="explainDetails"><summary>คำอธิบายเพิ่มเติม</summary>
+      <div class="interferenceReadoutBar" aria-label="ค่าสำคัญของการแทรกสอด">
+        <div><label>Wave Speed v</label><b id="intSpeedLabel">--</b></div>
+        <div><label>Wavelength λ</label><b id="intLambdaLabel">--</b></div>
+        <div><label>Ratio d/λ</label><b id="intRatioLabel">--</b></div>
+        <div><label>Phase difference Δφ</label><b id="intPhaseLabel">--</b></div>
+        <div><label>Center condition</label><b id="intCenterLabel">--</b></div>
+      </div>
+      <p class="compactInterferenceNote">แท่งสีม่วงที่แนวผู้ฟังแสดงโปรไฟล์ความเข้มเสียงสัมพัทธ์ I/I₀ จากการแทรกสอดของคลื่นเสียงที่ออกจากช่องแคบทั้งสอง</p>
+      <details class="explainDetails">
+        <summary>สาระสำคัญที่ควรสังเกต</summary>
         <div class="detailsBody"><div class="templateUnderCanvas explainGrid">
-          <div class="templateInsightCard"><div class="insightTitle">สิ่งที่สังเกตได้</div><ul>
-                <li>เสริมกันเมื่อ Δr = mλ สำหรับแหล่งกำเนิดเฟสตรงกัน</li>
-                <li>หักล้างกันเมื่อ Δr = (m + 1/2)λ</li>
-                <li>ความต่างเฟสทำให้ตำแหน่งบริเวณดังและค่อยเลื่อนไป</li>
+          <div class="templateInsightCard"><div class="insightTitle">หลักฟิสิกส์ที่ใช้</div><ul>
+            <li>หลังผ่านช่องแคบคู่ ช่องเปิดทั้งสองทำหน้าที่เสมือนแหล่งกำเนิดย่อย <b>S₁</b> และ <b>S₂</b> ที่มีความสัมพันธ์เฟสคงที่</li>
+            <li>การแทรกสอดขึ้นกับผลต่างทางเดินคลื่น <b>Δr</b> และความต่างเฟสเริ่มต้น <b>Δφ</b></li>
+            <li>เฟสรวมที่ตำแหน่งผู้ฟังประมาณได้จาก <b>Δ = 2πΔr/λ + Δφ</b></li>
+            <li>สำหรับแหล่งกำเนิดเฟสตรงกัน จะเสริมกันเมื่อ <b>Δr = mλ</b> และหักล้างกันเมื่อ <b>Δr = (m + 1/2)λ</b></li>
+            <li>เมื่อปรับระยะห่างช่องแคบ <b>d</b> หรือความถี่ <b>f</b> จำนวนตำแหน่งเสียงดัง–เสียงเบาบนแนวผู้ฟังจะเปลี่ยนไป</li>
           </ul></div>
           <div class="templateLegendCard">
-            <div class="legendRow"><span class="legendDot cyan"></span><span>แนวคลื่น/รังสีเสียง</span></div>
-            <div class="legendRow"><span class="legendDot red"></span><span>จุดสังเกตหรือค่าที่กำลังพิจารณา</span></div>
-            <div class="legendRow"><span class="legendMark">→</span><span>ทิศทางการเคลื่อนที่ของเสียง</span></div>
+            <div class="legendRow"><span class="legendDot cyan"></span><span>หน้าคลื่นตกกระทบจากลำโพง</span></div>
+            <div class="legendRow"><span class="legendDot green"></span><span>หน้าคลื่นจากช่องแคบคู่ (S₁, S₂)</span></div>
+            <div class="legendRow"><span class="legendDot violet"></span><span>โปรไฟล์ความเข้มเสียงสัมพัทธ์ I/I₀</span></div>
+            <div class="legendRow"><span class="legendMark">d</span><span>ระยะห่างระหว่างช่องแคบคู่</span></div>
           </div>
+          <div class="templateInsightCard"><div class="insightTitle">ข้อจำกัดของแบบจำลอง</div><ul>
+            <li>เป็นภาพจำลองเชิงการสอนแบบ 2 มิติ ไม่ได้รวมการสะท้อนจากผนังและวัตถุจริงในห้อง</li>
+            <li>แบบจำลองนี้ถือว่าช่องแคบทั้งสองมีความกว้างเท่ากันและแคบพอที่จะทำหน้าที่เป็นแหล่งกำเนิดย่อยได้</li>
+            <li>การคำนวณ I/I₀ แปลงระยะบนภาพเป็นเมตรจากสัดส่วนระยะช่องแคบ d ก่อนเทียบกับ λ</li>
+            <li>แอมพลิจูด A ใช้ปรับความเด่นของภาพเท่านั้น ไม่เปลี่ยนค่า λ หรือเงื่อนไขการเสริม–หักล้าง</li>
+          </ul></div>
         </div></div>
       </details>
     </div>
     <div class="card controlViz templateControlViz longitudinalControlViz neonControlViz">
-      <div class="panelTitleStack"><h3>Parameters (ตัวแปรควบคุม)</h3><p class="panelSubtext">ปรับค่าแล้วสังเกตการเปลี่ยนแปลงของภาพจำลอง</p></div>
-      <div class="field richField neonParamRow">
-        <div class="paramIcon">d</div>
-        <div class="paramText"><label>ระยะห่างแหล่งกำเนิด</label><small>Source separation d</small></div>
-        <input id="vizSeparation" type="range" min="0.3" max="2.0" step="0.05" value="0.8">
-        <div class="paramValueWrap"><span id="vizSeparationLabel" class="valueBadge">0.80 m</span></div>
-      </div>
-      <div class="field richField neonParamRow">
-        <div class="paramIcon">Δφ</div>
-        <div class="paramText"><label>ความต่างเฟส</label><small>Phase difference Δφ</small></div>
-        <input id="vizPhaseDiff" type="range" min="0" max="180" step="5" value="0">
-        <div class="paramValueWrap"><span id="vizPhaseDiffLabel" class="valueBadge">0°</span></div>
-      </div>
-      <div class="field richField neonParamRow">
-        <div class="paramIcon">◷</div>
-        <div class="paramText"><label>อัตราเวลา</label><small>Time Speed</small></div>
-        <input id="vizTimeSpeed" type="range" min="0.10" max="3.0" step="0.10" value="1.0">
-        <div class="paramValueWrap"><span id="vizTimeLabel" class="valueBadge">1.0×</span></div>
-      </div>
+      <div class="panelTitleStack"><h3>Parameters (ตัวแปรควบคุม)</h3><p class="panelSubtext">ปรับค่าของช่องแคบคู่และสังเกตตำแหน่งเสียงดัง–เสียงเบาบนแนวผู้ฟัง</p></div>
+      <div class="field richField neonParamRow sepRow"><div class="paramIcon">d</div><div class="paramText"><label>ระยะห่างช่องแคบคู่ d</label><small>ระยะระหว่างช่องเปิดทั้งสองมีผลต่อระยะห่างของตำแหน่งเสียงดัง–เบา</small></div><input id="vizSeparation" type="range" min="0.20" max="3.00" step="0.05" value="0.80"><div class="paramValueWrap"><span id="vizSeparationLabel" class="valueBadge">--</span></div></div>
+      <div class="field richField neonParamRow freqRow"><div class="paramIcon">f</div><div class="paramText"><label>ความถี่ f</label><small>ความถี่สูง → λ สั้น → ลวดลายการแทรกสอดถี่ขึ้น</small></div><input id="vizFreq" type="range" min="100" max="2500" step="10" value="600"><div class="paramValueWrap"><span id="vizFreqLabel" class="valueBadge">--</span></div></div>
+      <div class="field richField neonParamRow tempRow"><div class="paramIcon">T</div><div class="paramText"><label>อุณหภูมิอากาศ T</label><small>ใช้ประมาณอัตราเร็วเสียง v</small></div><input id="vizTemp" type="range" min="0" max="45" step="1" value="20"><div class="paramValueWrap"><span id="vizTempLabel" class="valueBadge">--</span></div></div>
+      <div class="field richField neonParamRow phaseRow"><div class="paramIcon">Δφ</div><div class="paramText"><label>ความต่างเฟส Δφ</label><small>ใช้เลื่อนตำแหน่งบริเวณเสริมและหักล้าง</small></div><input id="vizPhaseDiff" type="range" min="0" max="180" step="5" value="0"><div class="paramValueWrap"><span id="vizPhaseDiffLabel" class="valueBadge">--</span></div></div>
+      <div class="field richField neonParamRow ampRow"><div class="paramIcon">A</div><div class="paramText"><label>แอมพลิจูด A</label><small>ปรับความเด่นของภาพเท่านั้น</small></div><input id="vizAmp" type="range" min="0.20" max="1.00" step="0.05" value="0.75"><div class="paramValueWrap"><span id="vizAmpLabel" class="valueBadge">--</span></div></div>
+      <div class="field richField neonParamRow timeRow"><div class="paramIcon">◷</div><div class="paramText"><label>ความเร็วแอนิเมชัน</label><small>ปรับความเร็วของภาพเคลื่อนไหว</small></div><input id="vizTimeSpeed" type="range" min="0.2" max="2.0" step="0.1" value="1.0"><div class="paramValueWrap"><span id="vizTimeLabel" class="valueBadge">--</span></div></div>
+      <div class="field richField neonParamRow guideRow"><div class="paramIcon">G</div><div class="paramText"><label>เส้นช่วยอธิบาย Δr</label><small>เปิดเพื่อดูเส้นจากช่องแคบทั้งสองไปยังจุดตัวอย่างบนแนวผู้ฟัง</small></div><div class="guideControl"><label class="guideSwitch"><input id="vizShowGuides" type="checkbox"><span class="guideSlider"></span></label><span id="vizGuideLabel" class="valueBadge">ปิด</span></div></div>
     </div>
   </div>
-  <div class="card localExportCard templateExportCard" data-export-name="soundInterference">
-    <div class="panelTitleStack"><h3>ส่งออกข้อมูล</h3><p class="panelSubtext">บันทึกค่าพารามิเตอร์และภาพจำลองจากหน้านี้</p></div>
+  <div class="card templateDataCard localDataCard" id="vizLogCard">
+    <div class="sectionHead compactHead"><div><h3>ส่งออกข้อมูล</h3><p class="sub">บันทึกค่าพารามิเตอร์และภาพจำลองจากหน้านี้</p></div></div>
     <div class="actions"><button class="secondary localCaptureBtn">บันทึกค่าปัจจุบัน</button><button class="secondary localDownloadBtn">ดาวน์โหลด CSV</button><button id="vizExportBtn" class="secondary localPngBtn">บันทึกภาพ PNG</button><button class="secondary localClearBtn">ล้างข้อมูลหน้านี้</button></div>
     <div class="tableWrap localLogWrap"><table><thead><tr class="localHead"></tr></thead><tbody class="localBody"></tbody></table></div>
   </div>
-</section></main><script src="app.js"></script></body></html>
+</section>
+</main>
+<script>
+(() => {
+'use strict';
+const $=id=>document.getElementById(id);
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+const fmt=(n,d=2)=>Number(n).toFixed(d);
+const state={playing:false,phase:0,last:0,raf:0,logs:[]};
+function getNumber(id,fallback){const el=$(id);const n=el?Number(el.value):NaN;return Number.isFinite(n)?n:fallback;}
+function params(){
+  const d=getNumber('vizSeparation',.8),f=getNumber('vizFreq',600),T=getNumber('vizTemp',20),phaseDeg=getNumber('vizPhaseDiff',0),A=getNumber('vizAmp',.75),timeSpeed=getNumber('vizTimeSpeed',1);
+  const v=331+.6*T,lambda=v/f,ratio=d/lambda,phase=phaseDeg*Math.PI/180,centerI=(1+Math.cos(phase))/2;
+  let center='เสริมกันกลาง';
+  if(centerI<.25) center='หักล้างกันกลาง';
+  else if(centerI<.75) center='กึ่งเสริมกลาง';
+  return{d,f,T,phaseDeg,phase,A,timeSpeed,v,lambda,ratio,centerI,center,showGuides:!!$('vizShowGuides')?.checked};
+}
+function setText(id,text){const el=$(id);if(el)el.textContent=text;}
+function labels(p){
+  setText('vizSeparationLabel',`${fmt(p.d,2)} m`);
+  setText('vizFreqLabel',`${Math.round(p.f)} Hz`);
+  setText('vizTempLabel',`${Math.round(p.T)} °C`);
+  setText('vizPhaseDiffLabel',`${Math.round(p.phaseDeg)}°`);
+  setText('vizAmpLabel',fmt(p.A,2));
+  setText('vizTimeLabel',`${fmt(p.timeSpeed,1)}×`);
+  setText('intSpeedLabel',`${fmt(p.v,1)} m/s`);
+  setText('intLambdaLabel',`${fmt(p.lambda,2)} m`);
+  setText('intRatioLabel',fmt(p.ratio,2));
+  setText('intPhaseLabel',`${Math.round(p.phaseDeg)}°`);
+  setText('intCenterLabel',p.center);
+  setText('vizGuideLabel',p.showGuides?'เปิด':'ปิด');
+}
+function prep(canvas){
+  const rect=canvas.getBoundingClientRect(),cssW=rect.width||canvas.width||1200,cssH=Math.max(280,cssW*(440/1200)),dpr=Math.max(1,Math.min(2.2,window.devicePixelRatio||1));
+  canvas.style.height=`${cssH}px`;
+  if(canvas.width!==Math.round(cssW*dpr)||canvas.height!==Math.round(cssH*dpr)){canvas.width=Math.round(cssW*dpr);canvas.height=Math.round(cssH*dpr);}
+  const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return{ctx,w:cssW,h:cssH};
+}
+function play(){if(state.playing)return;state.playing=true;state.last=performance.now();cancelAnimationFrame(state.raf);state.raf=requestAnimationFrame(loop);}
+function pause(){state.playing=false;cancelAnimationFrame(state.raf);draw();}
+function reset(){state.playing=false;state.phase=0;state.last=0;cancelAnimationFrame(state.raf);draw();}
+function loop(now){if(!state.playing)return;const p=params();const dt=state.last?(now-state.last)/1000:0;state.last=now;state.phase+=dt*72*p.timeSpeed;draw();state.raf=requestAnimationFrame(loop);}
+function draw(){
+  const c=$('visualizerCanvas');if(!c)return;const p=params();labels(p);const {ctx,w,h}=prep(c);
+  ctx.clearRect(0,0,w,h);background(ctx,w,h);
+  const wallX=w*.44,cy=h*.52,top=h*.14,bottom=h*.86,slitHalf=clamp(h*.024,7,11),sep=clamp(p.d*h*.15,34,h*.42),pxPerM=sep/p.d,spacing=clamp(p.lambda*pxPerM,16,96),phase=((state.phase%spacing)+spacing)%spacing;
+  const speaker={x:w*.09,y:cy};
+  const slit1={x:wallX,y:cy-sep/2},slit2={x:wallX,y:cy+sep/2};
+  const screenX=w*.89;
+  speakerDraw(ctx,speaker,p);
+  incoming(ctx,speaker,wallX,top,bottom,spacing,phase,p,w,h);
+  wallDraw(ctx,wallX,top,bottom,slit1.y,slit2.y,slitHalf);
+  shadow(ctx,wallX,w,top,bottom,slit1.y,slit2.y,slitHalf);
+  secondarySources(ctx,slit1,slit2,p);
+  outgoing(ctx,slit1,spacing,phase,p,w,h,'rgba(45,212,191,');
+  outgoing(ctx,slit2,spacing,phase,p,w,h,'rgba(110,231,183,');
+  axis(ctx,cy,w);
+  if(p.showGuides) guides(ctx,slit1,slit2,screenX,cy,h,p,pxPerM);
+  receiver(ctx,screenX,top,bottom,slit1,slit2,p,pxPerM);
+  miniBadge(ctx,w,h,p);
+}
+function background(ctx,w,h){
+  const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#061422');g.addColorStop(.5,'#07111f');g.addColorStop(1,'#050a14');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(148,163,184,.08)';ctx.lineWidth=1;
+  for(let x=0;x<w;x+=42){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(let y=0;y<h;y+=42){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+}
+function speakerDraw(ctx,s,p){
+  ctx.save();ctx.translate(s.x,s.y);
+  ctx.fillStyle='#1e293b';rr(ctx,-36,-24,30,48,10,true,false);
+  ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.moveTo(-6,-17);ctx.lineTo(28,-33);ctx.lineTo(28,33);ctx.lineTo(-6,17);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='rgba(224,242,254,.78)';ctx.lineWidth=2;
+  for(let i=1;i<=3;i++){ctx.globalAlpha=.18+p.A*.20;ctx.beginPath();ctx.arc(30,0,12+i*13,-.58,.58);ctx.stroke();}
+  ctx.globalAlpha=1;ctx.fillStyle='#dbeafe';ctx.font='700 11px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('ลำโพง',-6,49);
+  ctx.restore();
+}
+function incoming(ctx,speaker,wallX,top,bottom,spacing,phase,p,w,h){
+  ctx.save();ctx.strokeStyle=`rgba(56,189,248,${.22+p.A*.32})`;ctx.lineWidth=2.2;
+  const sx=speaker.x+26,sy=speaker.y,maxR=wallX-sx-18;
+  for(let r=phase+spacing*.60;r<maxR;r+=spacing){ctx.beginPath();ctx.arc(sx,sy,r,-.72,.72);ctx.stroke();}
+  ctx.strokeStyle='rgba(226,232,240,.70)';ctx.fillStyle='rgba(226,232,240,.70)';ctx.lineWidth=2;arrow(ctx,w*.18,top+18,w*.31,top+18);
+  ctx.restore();
+}
+function wallDraw(ctx,x,top,bottom,y1,y2,slitHalf){
+  const width=24;
+  seg(ctx,x,top,y1-slitHalf,width);
+  seg(ctx,x,y1+slitHalf,y2-slitHalf,width);
+  seg(ctx,x,y2+slitHalf,bottom,width);
+  ctx.save();ctx.fillStyle='rgba(226,232,240,.92)';ctx.font='800 12px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('ช่องแคบคู่',x,top-14);
+  ctx.strokeStyle='#facc15';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x+20,y1);ctx.lineTo(x+20,y2);ctx.stroke();
+  ctx.fillStyle='#fde68a';ctx.font='800 13px system-ui,sans-serif';ctx.textAlign='left';ctx.fillText('d',x+28,(y1+y2)/2+5);ctx.restore();
+}
+function seg(ctx,x,y1,y2,width){
+  ctx.save();ctx.fillStyle='rgba(71,85,105,.96)';ctx.strokeStyle='rgba(148,163,184,.42)';ctx.lineWidth=1.1;
+  rr(ctx,x-width/2,y1,width,y2-y1,11,true,true);
+  ctx.restore();
+}
+function shadow(ctx,wallX,w,top,bottom,y1,y2,slitHalf){
+  ctx.save();ctx.fillStyle='rgba(15,23,42,.14)';
+  ctx.fillRect(wallX+16,top,w-wallX-140,Math.max(0,y1-slitHalf-top));
+  ctx.fillRect(wallX+16,y1+slitHalf,w-wallX-140,Math.max(0,y2-y1-2*slitHalf));
+  ctx.fillRect(wallX+16,y2+slitHalf,w-wallX-140,Math.max(0,bottom-y2-slitHalf));
+  ctx.restore();
+}
+function secondarySources(ctx,s1,s2,p){
+  ctx.save();
+  [[s1,'S₁'],[s2,'S₂']].forEach(([s,label],i)=>{ctx.fillStyle=i===0?'#2dd4bf':'#6ee7b7';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=10;ctx.beginPath();ctx.arc(s.x,s.y,4.2,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='rgba(226,232,240,.85)';ctx.font='700 10px system-ui,sans-serif';ctx.fillText(label,s.x+10,s.y-7);});
+  ctx.restore();
+}
+function outgoing(ctx,s,spacing,phase,p,w,h,colorPrefix){
+  ctx.save();ctx.lineWidth=2.0;const maxR=Math.hypot(w-s.x,h),base=.14+p.A*.26;
+  for(let r=phase+spacing*.55;r<maxR;r+=spacing){const fade=clamp(1-r/(maxR*1.03),.08,1);ctx.strokeStyle=`${colorPrefix}${base*fade})`;ctx.beginPath();ctx.arc(s.x,s.y,r,-1.00,1.00);ctx.stroke();}
+  ctx.restore();
+}
+function axis(ctx,cy,w){ctx.save();ctx.strokeStyle='rgba(226,232,240,.26)';ctx.setLineDash([5,7]);ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(w*.16,cy);ctx.lineTo(w*.87,cy);ctx.stroke();ctx.setLineDash([]);ctx.restore();}
+function guides(ctx,s1,s2,screenX,cy,h,p,pxPerM){
+  const sampleY=cy-h*.18;ctx.save();ctx.strokeStyle='rgba(248,250,252,.42)';ctx.lineWidth=1.6;ctx.setLineDash([6,7]);
+  line(ctx,s1.x,s1.y,screenX,sampleY);line(ctx,s2.x,s2.y,screenX,sampleY);ctx.setLineDash([]);
+  ctx.fillStyle='rgba(248,250,252,.92)';ctx.beginPath();ctx.arc(screenX,sampleY,3.5,0,Math.PI*2);ctx.fill();
+  const r1=Math.hypot(screenX-s1.x,sampleY-s1.y)/pxPerM,r2=Math.hypot(screenX-s2.x,sampleY-s2.y)/pxPerM,dr=Math.abs(r2-r1);
+  ctx.fillStyle='rgba(226,232,240,.78)';ctx.font='800 11px system-ui,sans-serif';ctx.fillText(`Δr≈${fmt(dr,2)} m`,screenX-90,sampleY-12);
+  ctx.restore();
+}
+function receiver(ctx,x,top,bottom,s1,s2,p,pxPerM){
+  ctx.save();ctx.strokeStyle='rgba(226,232,240,.44)';ctx.lineWidth=2;line(ctx,x,top,x,bottom);
+  ctx.fillStyle='rgba(226,232,240,.82)';ctx.font='700 11px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('แนวผู้ฟัง',x,bottom+17);
+  ctx.textAlign='left';ctx.fillStyle='rgba(216,180,254,.90)';ctx.fillText('I/I₀',x+12,top-8);
+  for(let y=top;y<=bottom;y+=3){const I=relativeIntensity(x,y,s1,s2,p,pxPerM),alpha=clamp(I*p.A,.04,.92),wid=8+I*28;ctx.fillStyle=`rgba(167,139,250,${alpha})`;rr(ctx,x+7,y-1.15,wid,2.3,2,true,false);}ctx.restore();
+}
+function relativeIntensity(x,y,s1,s2,p,pxPerM){const r1=Math.hypot(x-s1.x,y-s1.y)/pxPerM,r2=Math.hypot(x-s2.x,y-s2.y)/pxPerM,delta=2*Math.PI*(r2-r1)/p.lambda+p.phase;return (1+Math.cos(delta))/2;}
+function miniBadge(ctx,w,h,p){ctx.save();const x=16,y=h-50,bw=Math.min(w-32,470),bh=36;ctx.fillStyle='rgba(2,6,23,.58)';ctx.strokeStyle='rgba(148,163,184,.22)';rr(ctx,x,y,bw,bh,14,true,true);ctx.fillStyle='#e0f2fe';ctx.font='800 12px system-ui,sans-serif';ctx.fillText(`λ=${fmt(p.lambda,2)} m   d/λ=${fmt(p.ratio,2)}   Δφ=${Math.round(p.phaseDeg)}°   ${p.center}`,x+14,y+23);ctx.restore();}
+function arrow(ctx,x1,y1,x2,y2){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();const a=Math.atan2(y2-y1,x2-x1),h=8;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-h*Math.cos(a-Math.PI/6),y2-h*Math.sin(a-Math.PI/6));ctx.lineTo(x2-h*Math.cos(a+Math.PI/6),y2-h*Math.sin(a+Math.PI/6));ctx.closePath();ctx.fill();}
+function line(ctx,x1,y1,x2,y2){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
+function rr(ctx,x,y,w,h,r,fill=true,stroke=false){const q=Math.min(r,Math.abs(w)/2,Math.abs(h)/2);ctx.beginPath();ctx.moveTo(x+q,y);ctx.arcTo(x+w,y,x+w,y+h,q);ctx.arcTo(x+w,y+h,x,y+h,q);ctx.arcTo(x,y+h,x,y,q);ctx.arcTo(x,y,x+w,y,q);ctx.closePath();if(fill)ctx.fill();if(stroke)ctx.stroke();}
+function row(){const p=params();return{timestamp:new Date().toISOString(),topic:'Sound Interference',model:'double_slit',slit_separation_d_m:Number(fmt(p.d,3)),frequency_Hz:Math.round(p.f),temperature_C:Math.round(p.T),speed_m_s:Number(fmt(p.v,2)),wavelength_m:Number(fmt(p.lambda,4)),d_over_lambda:Number(fmt(p.ratio,3)),phase_difference_deg:Math.round(p.phaseDeg),center_condition:p.center,amplitude_display_A:Number(fmt(p.A,2)),show_guides:p.showGuides};}
+function renderLog(){const head=document.querySelector('.localHead'),body=document.querySelector('.localBody');if(!head||!body)return;const sample=state.logs[0]||row(),keys=Object.keys(sample);head.innerHTML=keys.map(k=>`<th>${esc(k)}</th>`).join('');body.innerHTML=state.logs.map(r=>`<tr>${keys.map(k=>`<td>${esc(r[k]??'')}</td>`).join('')}</tr>`).join('');}
+function downloadCsv(){if(!state.logs.length)state.logs.push(row());const keys=Object.keys(state.logs[0]),rows=[keys.join(',')].concat(state.logs.map(r=>keys.map(k=>csv(r[k])).join(',')));const blob=new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`soundInterference_${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.csv`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);renderLog();}
+function savePng(){const c=$('visualizerCanvas');if(!c)return;draw();try{c.toBlob(blob=>{if(!blob)return;const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='soundInterference.png';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);},'image/png');}catch(e){}}
+function csv(v){const s=String(v??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;}
+function esc(v){return String(v??'').replace(/[&<>\"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));}
+document.addEventListener('DOMContentLoaded',()=>{
+  ['vizSeparation','vizFreq','vizTemp','vizPhaseDiff','vizAmp','vizTimeSpeed','vizShowGuides'].forEach(id=>{$(id)?.addEventListener('input',draw);$(id)?.addEventListener('change',draw);});
+  $('vizPlayBtn')?.addEventListener('click',play);$('vizPauseBtn')?.addEventListener('click',pause);$('vizResetBtn')?.addEventListener('click',reset);$('vizExportBtn')?.addEventListener('click',savePng);
+  document.querySelector('.localCaptureBtn')?.addEventListener('click',()=>{state.logs.push(row());renderLog();});
+  document.querySelector('.localDownloadBtn')?.addEventListener('click',downloadCsv);
+  document.querySelector('.localClearBtn')?.addEventListener('click',()=>{state.logs=[];renderLog();});
+  draw();renderLog();
+});
+})();
+</script>
+</body>
+</html>

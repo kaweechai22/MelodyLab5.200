@@ -1,0 +1,14 @@
+{
+  "version": "v5.188",
+  "physics_audit": [
+    "fixed unit mismatch by converting pixel distances to meters using pxPerM=slitSeparationPx/d",
+    "I/I0 uses Δ=2πΔr/λ+Δφ with Δr in meters",
+    "center condition is correct because Δr=0 on centerline for symmetric slits",
+    "d means double-slit separation, not source separation"
+  ],
+  "checks": {
+    "inline_js": "ok",
+    "app_js": "ok",
+    "links": "ok"
+  }
+}

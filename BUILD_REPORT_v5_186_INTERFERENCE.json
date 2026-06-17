@@ -1,0 +1,11 @@
+{
+  "base": "v5.185 full package based on v5.167",
+  "new_version": "v5.186",
+  "changed_file": "visualizer_sound_interference.html",
+  "checks": {
+    "inline_script": "ok",
+    "app_js": "ok",
+    "duplicate_ids": [],
+    "missing_refs": 0
+  }
+}

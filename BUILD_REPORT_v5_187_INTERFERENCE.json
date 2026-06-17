@@ -1,0 +1,10 @@
+{
+  "version": "v5.187",
+  "base": "v5.186 full package (base167 lineage)",
+  "focus": "replace sound interference with double-slit model: speaker -> double slits -> coherent secondary sources -> listener screen",
+  "checked": {
+    "interference_script_node_check": true,
+    "app_js_node_check": true,
+    "link_existence": true
+  }
+}
