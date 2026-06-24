@@ -1,7 +1,9 @@
-# MelodyLab v5.262 Doppler Full Run Verified
+# MelodyLab v5.263 Doppler Visual Redesign
 
-ตรวจแก้จาก v5.261:
-- เพิ่มไฟล์ core ที่ขาด: style.css, app.js, manifest.json, sw.js
-- คงปุ่มเล่น/หยุด/รีเซ็ตแบบ Air Column
-- คงฟิสิกส์ Doppler จาก v5.260/v5.261
-- ตรวจลิงก์ไฟล์, syntax, service worker assets และ runtime mock ของหน้า Doppler
+ปรับหน้า Doppler ตามแบบภาพออกแบบใหม่:
+- ปุ่มเล่น/หยุด/รีเซ็ตขนาดใหญ่และเห็นชัดด้านบน
+- ย้ายปุ่มเสียงและปุ่มฟังซ้าย/ขวาไว้ใกล้จอรถ
+- เอา POE ออกจากหน้า
+- วาดรถและผู้ฟังใหม่ให้ดูน่าสนใจขึ้นด้วย canvas
+- คงฟิสิกส์จาก v5.260: ปรับ v_s โดยตรง และคำนวณ v_s/v อัตโนมัติ
+- ผู้ฟังซ้าย/ขวาสลับความถี่เมื่อเปลี่ยนทิศรถ
